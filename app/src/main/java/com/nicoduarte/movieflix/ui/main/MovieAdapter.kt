@@ -1,0 +1,134 @@
+package com.nicoduarte.movieflix.ui.main
+
+import android.view.View
+import android.view.ViewGroup
+import android.view.animation.AnimationUtils
+import androidx.recyclerview.widget.LinearSnapHelper
+import androidx.recyclerview.widget.RecyclerView
+import com.nicoduarte.movieflix.R
+import com.nicoduarte.movieflix.api.ApiService
+import com.nicoduarte.movieflix.database.model.Movie
+import com.nicoduarte.movieflix.ui.utils.inflate
+import com.nicoduarte.movieflix.ui.utils.loadImage
+import kotlinx.android.synthetic.main.item_inner_recycler.view.*
+import kotlinx.android.synthetic.main.item_main_movie.view.*
+
+class MovieAdapter(
+        private var items: MutableList<Movie>,
+        private val clickListener: (Movie) -> Unit)
+    : RecyclerView.Adapter<MovieAdapter.BaseHolder<*>>()  {
+
+    private var lastPosition = -1
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseHolder<*> {
+        return when (viewType) {
+            ITEM_SUBSCRIPTION -> MovieSubscriptionHolder(parent.inflate(viewType))
+            ITEM_TITLE -> TitleHolder(parent.inflate(viewType))
+            ITEM_MOVIE -> MovieHolder(parent.inflate(viewType))
+            else -> throw IllegalArgumentException("Invalid viewType")
+        }
+    }
+
+    override fun getItemCount() = items.size
+
+    override fun getItemViewType(position: Int): Int {
+        return when(position) {
+            0 -> ITEM_SUBSCRIPTION
+            1 -> ITEM_TITLE
+            else -> ITEM_MOVIE
+        }
+    }
+
+    override fun onBindViewHolder(holder: BaseHolder<*>, position: Int) {
+        when(getItemViewType(position)) {
+            ITEM_SUBSCRIPTION -> (holder as MovieSubscriptionHolder).bind(emptyList())
+            ITEM_TITLE -> (holder as TitleHolder).bind("")
+            ITEM_MOVIE -> {
+                (holder as MovieHolder).bind(items[position])
+                holder.setAnimation(holder.itemView, position)
+            }
+            else -> throw IllegalArgumentException("Invalid ViewHolder")
+        }
+    }
+
+    override fun onViewDetachedFromWindow(holder: BaseHolder<*>) {
+        super.onViewDetachedFromWindow(holder)
+        if(holder is MovieHolder) holder.clearAnimation()
+    }
+
+    fun addMovies(movies: List<Movie>) {
+        if(items.isNotEmpty()) {
+            val positionStart = items.size
+            items.addAll(movies)
+            notifyItemRangeInserted(positionStart, items.size)
+        } else {
+            items.addAll(movies)
+            notifyItemRangeInserted(2, items.size)
+        }
+    }
+
+    fun setMovies(movies: List<Movie>) {
+        notifyItemRangeRemoved(0, items.size)
+        items = movies.toMutableList()
+        notifyItemRangeInserted(0, items.size)
+    }
+
+    inner class MovieSubscriptionHolder(itemView: View) : BaseHolder<List<String>>(itemView) {
+
+        init {
+            itemView.rvMoviesSubscription.adapter = SubscriptionAdapter()
+            val snapHelper = LinearSnapHelper()
+            snapHelper.attachToRecyclerView(itemView.rvMoviesSubscription)
+        }
+
+        public override fun bind(data: List<String>) = with(itemView) {
+
+        }
+    }
+
+    inner class TitleHolder(itemView: View) : BaseHolder<String>(itemView) {
+
+        public override fun bind(data: String) = with(itemView) {
+
+        }
+    }
+
+    inner class MovieHolder(itemView: View) : BaseHolder<Movie>(itemView) {
+
+        fun setAnimation(viewToAnimate: View, position: Int) {
+            // If the bound view wasn't previously displayed on screen, it's animated
+            if (position > lastPosition) {
+                val animation = AnimationUtils.loadAnimation(
+                    viewToAnimate.context,
+                    android.R.anim.slide_in_left
+                )
+                viewToAnimate.startAnimation(animation)
+                lastPosition = position
+            }
+        }
+
+        fun clearAnimation() {
+            itemView.clearAnimation()
+        }
+
+        public override fun bind(data: Movie): Unit = with(itemView)  {
+            tvName.text = data.title
+            tvCategory.text = data.genre?.name
+            ivCover.loadImage(
+                ApiService.IMAGE_BASE_URL.plus(data.backdropPath),
+                R.drawable.placeholder_movie
+            )
+            setOnClickListener { clickListener(data) }
+        }
+    }
+
+    abstract inner class BaseHolder<T>(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        protected abstract fun bind(data: T)
+    }
+
+    companion object {
+        private const val ITEM_SUBSCRIPTION = R.layout.item_inner_recycler
+        private const val ITEM_TITLE = R.layout.item_title
+        private const val ITEM_MOVIE = R.layout.item_main_movie
+    }
+}

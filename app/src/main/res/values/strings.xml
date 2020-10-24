@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">Movieflix</string>
+    <string name="title_all_movies">todas</string>
+    <string name="title_subscription">suscriptas</string>
+
+    <string name="timeout">Timeout</string>
+    <string name="unknown_error">Error desconocido</string>
 </resources>

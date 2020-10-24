@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:cardCornerRadius="@dimen/radius"
+    app:cardPreventCornerOverlap="true"
+    app:cardUseCompatPadding="true"
+    android:clickable="true"
+    android:foreground="?attr/selectableItemBackground">
+
+    <ImageView
+        android:id="@+id/ivCover"
+        android:layout_width="@dimen/mini_card_width"
+        android:layout_height="@dimen/mini_card_height"
+        android:scaleType="centerCrop"
+        android:src="@drawable/placeholder_movie"/>
+
+</com.google.android.material.card.MaterialCardView>
