@@ -42,11 +42,21 @@ fun Context.showMessage(container: View?, message: String) {
     }
 }
 
-fun ImageView.colorPalette(color: Int, factor: Float): Int {
-    val a: Int = Color.alpha(color)
-    val r = (Color.red(color) * factor).roundToInt()
-    val g = (Color.green(color) * factor).roundToInt()
-    val b = (Color.blue(color) * factor).roundToInt()
+fun getDateFormatted(strDate: String?, formatOrigin: String?): String {
+    return try{
+        val sdfOrigin = SimpleDateFormat(formatOrigin, Locale.US)
+        val sdfDestiny = SimpleDateFormat("yyyy", Locale.US)
+        sdfDestiny.format(sdfOrigin.parse(strDate))
+    } catch (e: Exception) {
+        ""
+    }
+}
+
+fun ImageView.colorPalette(color: Int): Int {
+    val a: Int = 225
+    val r = Color.red(color)
+    val g = Color.green(color)
+    val b = Color.blue(color)
     return Color.argb(
         a,
         min(r, 255),

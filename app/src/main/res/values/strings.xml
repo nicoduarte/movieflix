@@ -7,4 +7,5 @@
     <string name="unknown_error">Error desconocido</string>
     <string name="text_overview">OVERVIEW</string>
     <string name="btn_subscription">SUSCRIBIRME</string>
+    <string name="format_origin" translatable="false">yyyy-MM-dd</string>
 </resources>
