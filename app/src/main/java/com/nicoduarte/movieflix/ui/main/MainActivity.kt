@@ -1,5 +1,6 @@
 package com.nicoduarte.movieflix.ui.main
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -8,6 +9,7 @@ import com.nicoduarte.movieflix.R
 import com.nicoduarte.movieflix.api.Result
 import com.nicoduarte.movieflix.database.model.Movie
 import com.nicoduarte.movieflix.ui.BaseActivity
+import com.nicoduarte.movieflix.ui.detail.MovieDetailActivity
 import com.nicoduarte.movieflix.ui.utils.EqualSpacingItemDecoration
 import com.nicoduarte.movieflix.ui.utils.gone
 import com.nicoduarte.movieflix.ui.utils.showMessage
@@ -44,7 +46,11 @@ class MainActivity : BaseActivity() {
 
     private fun setupList() {
         rvMovies.adapter = MovieAdapter(mutableListOf()) {
-
+            startActivity(Intent(
+                    this,
+                    MovieDetailActivity::class.java)
+                    .putExtra(MovieDetailActivity.EXTRA_MOVIE, it)
+            )
         }
         rvMovies.addItemDecoration(
             EqualSpacingItemDecoration(
