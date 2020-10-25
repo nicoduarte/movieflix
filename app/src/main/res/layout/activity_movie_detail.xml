@@ -121,7 +121,7 @@
                     tools:text="2011" />
 
                 <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnSubscription"
+                    android:id="@+id/btnSubscribe"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/sfns_text"
@@ -130,7 +130,12 @@
                     android:textColor="@color/white"
                     android:letterSpacing="-0.02"
                     android:text="@string/btn_subscription"
-                    android:layout_marginTop="@dimen/margin_16dp"/>
+                    android:layout_marginTop="@dimen/margin_16dp"
+                    android:paddingHorizontal="@dimen/padding_32dp"
+                    app:strokeColor="@color/white"
+                    app:strokeWidth="1dp"
+                    app:cornerRadius="25dp"
+                    app:backgroundTint="@android:color/transparent"/>
             </LinearLayout>
 
             <TextView

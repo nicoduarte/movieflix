@@ -1,9 +1,11 @@
 package com.nicoduarte.movieflix.ui.detail
 
 import android.animation.ObjectAnimator
+import android.content.res.ColorStateList
 import android.graphics.Bitmap
 import android.os.Bundle
 import androidx.annotation.Nullable
+import androidx.core.content.ContextCompat
 import androidx.palette.graphics.Palette
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.DiskCacheStrategy
@@ -33,6 +35,7 @@ class MovieDetailActivity : BaseActivity(), AppBarLayout.OnOffsetChangedListener
         movie?.let { loadMovie(it) }
 
         appBar.addOnOffsetChangedListener(this)
+        btnSubscribe.setOnClickListener { }
     }
 
     override fun onOffsetChanged(appBarLayout: AppBarLayout, verticalOffset: Int) {
@@ -83,12 +86,12 @@ class MovieDetailActivity : BaseActivity(), AppBarLayout.OnOffsetChangedListener
                                 tvTitle.setTextColor(it)
                                 tvReleaseDate.setTextColor(it)
                                 tvOverview.setTextColor(it)
-                                btnSubscription.setBackgroundColor(it)
                                 tvLabelOverview.setTextColor(it)
+                                btnSubscribe.backgroundTintList = ColorStateList.valueOf(it)
                             }
 
                             palette.darkVibrantSwatch?.rgb?.let {
-                                btnSubscription.setTextColor(it)
+                                btnSubscribe.setTextColor(it)
                             }
                         }
                         return false
