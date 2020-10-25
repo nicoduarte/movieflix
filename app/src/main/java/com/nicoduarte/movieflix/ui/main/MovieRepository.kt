@@ -6,7 +6,6 @@ import com.nicoduarte.movieflix.database.model.Genre
 import com.nicoduarte.movieflix.database.model.Movie
 import io.reactivex.Observable
 import io.reactivex.functions.BiFunction
-import java.util.concurrent.TimeUnit
 
 class MovieRepository(
     application: Application
