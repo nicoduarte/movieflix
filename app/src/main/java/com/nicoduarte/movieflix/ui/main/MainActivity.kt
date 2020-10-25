@@ -53,7 +53,7 @@ class MainActivity : BaseActivity() {
         }
         rvMovies.addItemDecoration(
             EqualSpacingItemDecoration(
-                32,
+                resources.getDimensionPixelOffset(R.dimen.margin_8dp),
                 EqualSpacingItemDecoration.VERTICAL
             )
         )
