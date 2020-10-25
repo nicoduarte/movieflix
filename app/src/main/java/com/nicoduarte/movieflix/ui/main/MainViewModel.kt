@@ -1,9 +1,8 @@
 package com.nicoduarte.movieflix.ui.main
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import com.nicoduarte.movieflix.database.model.Movie
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -11,9 +10,8 @@ import io.reactivex.schedulers.Schedulers
 import com.nicoduarte.movieflix.api.Result
 
 class MainViewModel(
-    application: Application,
     private val movieRepository: MovieRepository
-) : AndroidViewModel(application) {
+) : ViewModel() {
 
     private val compositeDisposable = CompositeDisposable()
     private val movies = MutableLiveData<Result<List<Movie>>>()
@@ -29,8 +27,8 @@ class MainViewModel(
         compositeDisposable.add(disposable)
     }
 
-    private fun onErrorMovies(t: Throwable) {
-        movies.postValue(Result.error(message = t.message))
+    private fun onErrorMovies(error: Throwable) {
+        movies.postValue(Result.error(message = error.message))
     }
 
     private fun onSuccessMovies(list: List<Movie>) {

@@ -11,7 +11,7 @@ import com.nicoduarte.movieflix.ui.utils.loadImage
 import kotlinx.android.synthetic.main.item_search_movie.view.*
 
 class SearchAdapter(
-    private val movieList: MutableList<Movie>,
+    private var movieList: MutableList<Movie>,
     private val clickListener: (Movie) -> Unit
 )
     : RecyclerView.Adapter<RecyclerView.ViewHolder>()  {
@@ -25,6 +25,12 @@ class SearchAdapter(
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         (holder as MovieHolder).bind(movieList[position])
+    }
+
+    fun addMovies(list: List<Movie>) {
+        notifyItemRangeRemoved(0, movieList.size)
+        movieList = list.toMutableList()
+        notifyItemRangeInserted(0, movieList.size)
     }
 
     inner class MovieHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {

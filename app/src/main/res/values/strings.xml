@@ -8,6 +8,7 @@
     <string name="text_overview">OVERVIEW</string>
     <string name="btn_subscription">SUSCRIBIRME</string>
     <string name="format_origin" translatable="false">yyyy-MM-dd</string>
-    <string name="hint_search">Búsqueda</string>
+    <string name="hint_search">Buscar</string>
     <string name="add_movie">AGREGAR</string>
+    <string name="no_results">No se encontraron resultados</string>
 </resources>
