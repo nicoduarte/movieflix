@@ -12,7 +12,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.MyApplication">
-        <activity android:name=".ui.search.SearchActivity"></activity>
+        <activity android:name=".ui.search.SearchActivity"/>
         <activity android:name=".ui.detail.MovieDetailActivity" />
         <activity android:name=".ui.main.MainActivity">
             <intent-filter>

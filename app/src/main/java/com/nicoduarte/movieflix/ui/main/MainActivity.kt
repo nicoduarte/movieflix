@@ -10,6 +10,7 @@ import com.nicoduarte.movieflix.api.Result
 import com.nicoduarte.movieflix.database.model.Movie
 import com.nicoduarte.movieflix.ui.BaseActivity
 import com.nicoduarte.movieflix.ui.detail.MovieDetailActivity
+import com.nicoduarte.movieflix.ui.search.SearchActivity
 import com.nicoduarte.movieflix.ui.utils.EqualSpacingItemDecoration
 import com.nicoduarte.movieflix.ui.utils.gone
 import com.nicoduarte.movieflix.ui.utils.showMessage
@@ -19,9 +20,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 class MainActivity : BaseActivity() {
 
     private val viewModelFactory by lazy { ViewModelFactory(application) }
-    private val viewModel by viewModels<MainViewModel> {
-        viewModelFactory
-    }
+    private val viewModel by viewModels<MainViewModel> { viewModelFactory }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -69,9 +68,15 @@ class MainActivity : BaseActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.search -> {
+                goToSearch()
                 true
             }
             else -> super.onOptionsItemSelected(item)
         }
+    }
+
+    private fun goToSearch() {
+        startActivity(Intent(this, SearchActivity::class.java))
+        overridePendingTransition(R.anim.anim_slide_in_right, R.anim.anim_slide_out_left)
     }
 }
