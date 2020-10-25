@@ -14,6 +14,7 @@
 
     <dimen name="radius">5dp</dimen>
 
+    <dimen name="divider_height">0.5dp</dimen>
     <dimen name="material_btn_height">30dp</dimen>
     <dimen name="mini_card_width">100dp</dimen>
     <dimen name="mini_card_height">150dp</dimen>

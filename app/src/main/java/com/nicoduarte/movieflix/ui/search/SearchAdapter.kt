@@ -28,11 +28,17 @@ class SearchAdapter(
         (holder as MovieHolder).bind(movieList[position])
     }
 
-    fun addMovies(list: List<Movie>) {
+    fun setMovies(list: List<Movie>) {
         movieList.clear()
         notifyDataSetChanged()
         movieList.addAll(list)
         notifyItemRangeInserted(0, movieList.size)
+    }
+
+    fun addMovies(list: List<Movie>) {
+        val positionStart = list.size
+        movieList.addAll(list)
+        notifyItemRangeInserted(positionStart, movieList.size)
     }
 
     inner class MovieHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {

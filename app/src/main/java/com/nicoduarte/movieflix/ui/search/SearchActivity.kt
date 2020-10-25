@@ -3,10 +3,12 @@ package com.nicoduarte.movieflix.ui.search
 import android.app.SearchManager
 import android.content.Context
 import android.content.Intent
+import android.graphics.drawable.ShapeDrawable
 import android.os.Bundle
 import android.view.Menu
 import androidx.activity.viewModels
 import androidx.appcompat.widget.SearchView
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DividerItemDecoration
 import com.nicoduarte.movieflix.R
 import com.nicoduarte.movieflix.api.Result
@@ -46,26 +48,34 @@ class SearchActivity : BaseActivity() {
         }
         rvSearchMovies.addItemDecoration(
                 EqualSpacingItemDecoration(
-                        32,
+                        resources.getDimensionPixelOffset(R.dimen.margin_8dp),
                         EqualSpacingItemDecoration.VERTICAL
-                ))
-        rvSearchMovies.addItemDecoration(
-                DividerItemDecoration(
-                        this,
-                        DividerItemDecoration.VERTICAL)
+                )
         )
+
+        val divider = DividerItemDecoration(
+                this,
+                DividerItemDecoration.VERTICAL
+        )
+
+        divider.setDrawable(ShapeDrawable().apply {
+            intrinsicHeight = resources.getDimensionPixelOffset(R.dimen.divider_height)
+            paint.color = ContextCompat.getColor(this@SearchActivity, R.color.gray_divider)
+        })
+
+        rvSearchMovies.addItemDecoration(divider)
     }
 
     private fun observerLiveData(result: Result<List<Movie>>) {
         result.setState({
             progress.gone()
             rvSearchMovies.visible()
-            (rvSearchMovies.adapter as SearchAdapter).addMovies(it)
+            (rvSearchMovies.adapter as SearchAdapter).setMovies(it)
             if(it.isEmpty()) tvEmptyMovies.visible()
             else tvEmptyMovies.gone()
         },{
             showMessage(rootView, it)
-            tvEmptyMovies.gone()
+            progress.gone()
             tvEmptyMovies.visible()
         },{
             progress.visible()
