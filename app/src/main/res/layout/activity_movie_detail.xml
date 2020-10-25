@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/slate"
     tools:context=".ui.detail.MovieDetailActivity"
     android:fitsSystemWindows="true">
 
@@ -16,8 +17,7 @@
     <ImageView
         android:id="@+id/ivBackground"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:background="@color/slate"/>
+        android:layout_height="match_parent" />
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appBar"

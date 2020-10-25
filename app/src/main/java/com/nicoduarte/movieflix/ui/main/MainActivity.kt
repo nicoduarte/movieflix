@@ -5,16 +5,15 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import androidx.activity.viewModels
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.nicoduarte.movieflix.R
 import com.nicoduarte.movieflix.api.Result
 import com.nicoduarte.movieflix.database.model.Movie
 import com.nicoduarte.movieflix.ui.BaseActivity
 import com.nicoduarte.movieflix.ui.detail.MovieDetailActivity
 import com.nicoduarte.movieflix.ui.search.SearchActivity
-import com.nicoduarte.movieflix.ui.utils.EqualSpacingItemDecoration
-import com.nicoduarte.movieflix.ui.utils.gone
-import com.nicoduarte.movieflix.ui.utils.showMessage
-import com.nicoduarte.movieflix.ui.utils.visible
+import com.nicoduarte.movieflix.ui.utils.*
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : BaseActivity() {
@@ -32,31 +31,27 @@ class MainActivity : BaseActivity() {
 
     private fun observerLiveData(result: Result<List<Movie>>) {
         result.setState({
-            progress.gone()
-            rvMovies.visible()
             (rvMovies.adapter as MovieAdapter).addMovies(it)
-        },{
+        }, {
             showMessage(rootView, it)
-        },{
-            progress.visible()
-            rvMovies.gone()
-        })
+        }, {})
     }
 
     private fun setupList() {
-        rvMovies.adapter = MovieAdapter(mutableListOf()) {
-            startActivity(Intent(
-                    this,
-                    MovieDetailActivity::class.java)
-                    .putExtra(MovieDetailActivity.EXTRA_MOVIE, it)
-            )
-        }
+        rvMovies.adapter = MovieAdapter(mutableListOf()) { goToDetail(it) }
         rvMovies.addItemDecoration(
             EqualSpacingItemDecoration(
                 resources.getDimensionPixelOffset(R.dimen.margin_8dp),
                 EqualSpacingItemDecoration.VERTICAL
             )
         )
+        rvMovies.addOnScrollListener(
+            object :
+                EndlessRecyclerViewScrollListener(rvMovies.layoutManager as LinearLayoutManager) {
+                override fun onLoadMore(page: Int, totalItemsCount: Int, view: RecyclerView) {
+                    viewModel.getMovies(page)
+                }
+            })
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -73,6 +68,17 @@ class MainActivity : BaseActivity() {
             }
             else -> super.onOptionsItemSelected(item)
         }
+    }
+
+    private fun goToDetail(movie: Movie) {
+        startActivity(
+            Intent(
+                this,
+                MovieDetailActivity::class.java
+            )
+                .putExtra(MovieDetailActivity.EXTRA_MOVIE, movie)
+        )
+        overridePendingTransition(R.anim.anim_slide_in_right, R.anim.anim_slide_out_left)
     }
 
     private fun goToSearch() {

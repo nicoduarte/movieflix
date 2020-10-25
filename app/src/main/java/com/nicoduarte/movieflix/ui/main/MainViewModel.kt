@@ -18,9 +18,9 @@ class MainViewModel(
 
     init { getMovies() }
 
-    private fun getMovies() {
+    fun getMovies(page: Int = 1) {
         movies.postValue(Result.loading())
-        val disposable = movieRepository.getMovies()
+        val disposable = movieRepository.getMovies(page)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe(this::onSuccessMovies, this::onErrorMovies)

@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.nicoduarte.movieflix.R
 import com.nicoduarte.movieflix.api.ApiService
 import com.nicoduarte.movieflix.database.model.Movie
+import com.nicoduarte.movieflix.ui.utils.gone
 import com.nicoduarte.movieflix.ui.utils.inflate
 import com.nicoduarte.movieflix.ui.utils.loadImage
 import kotlinx.android.synthetic.main.item_inner_recycler.view.*
@@ -67,12 +68,6 @@ class MovieAdapter(
         }
     }
 
-    fun setMovies(movies: List<Movie>) {
-        notifyItemRangeRemoved(0, items.size)
-        items = movies.toMutableList()
-        notifyItemRangeInserted(0, items.size)
-    }
-
     inner class MovieSubscriptionHolder(itemView: View) : BaseHolder<List<String>>(itemView) {
 
         init {
@@ -113,11 +108,16 @@ class MovieAdapter(
 
         public override fun bind(data: Movie): Unit = with(itemView)  {
             tvName.text = data.title
-            tvCategory.text = data.genre?.name
-            ivCover.loadImage(
-                ApiService.IMAGE_BASE_URL.plus(data.backdropPath),
-                R.drawable.placeholder_movie
-            )
+            data.genre?.let {
+                if (it.name.isEmpty()) tvCategory.gone()
+                else tvCategory.text = data.genre?.name
+            }
+            if (!data.backdropPath.isNullOrEmpty()) {
+                ivCover.loadImage(
+                    ApiService.IMAGE_BASE_URL.plus(data.backdropPath),
+                    R.drawable.placeholder_movie
+                )
+            }
             setOnClickListener { clickListener(data) }
         }
     }
