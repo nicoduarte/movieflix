@@ -2,6 +2,7 @@ package com.nicoduarte.movieflix.ui.search
 
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.nicoduarte.movieflix.R
 import com.nicoduarte.movieflix.api.ApiService
@@ -28,8 +29,9 @@ class SearchAdapter(
     }
 
     fun addMovies(list: List<Movie>) {
-        notifyItemRangeRemoved(0, movieList.size)
-        movieList = list.toMutableList()
+        movieList.clear()
+        notifyDataSetChanged()
+        movieList.addAll(list)
         notifyItemRangeInserted(0, movieList.size)
     }
 
@@ -41,7 +43,24 @@ class SearchAdapter(
                 ApiService.IMAGE_BASE_URL.plus(movie.posterPath),
                 R.drawable.placeholder_movie
             )
+
+            if(movie.isSubscribed) {
+                btnAdd.setBackgroundResource(R.drawable.bg_btn_added)
+                btnAdd.setTextColor(ContextCompat.getColor(btnAdd.context, R.color.black_background))
+                btnAdd.setText(R.string.added_movie)
+            }
+            else {
+                btnAdd.setBackgroundResource(R.drawable.bg_btn_add)
+                btnAdd.setTextColor(ContextCompat.getColor(btnAdd.context, R.color.white_30))
+                btnAdd.setText(R.string.add_movie)
+            }
+
             setOnClickListener { clickListener(movie) }
+            btnAdd.setOnClickListener {
+                movie.isSubscribed = !movie.isSubscribed
+                movieList[adapterPosition] = movie
+                notifyItemChanged(adapterPosition)
+            }
         }
     }
 }

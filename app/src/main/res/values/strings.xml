@@ -10,5 +10,6 @@
     <string name="format_origin" translatable="false">yyyy-MM-dd</string>
     <string name="hint_search">Buscar</string>
     <string name="add_movie">AGREGAR</string>
+    <string name="added_movie">AGREGADO</string>
     <string name="no_results">No se encontraron resultados</string>
 </resources>

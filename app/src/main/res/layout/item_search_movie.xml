@@ -4,9 +4,7 @@
     android:layout_height="wrap_content"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:background="@color/black_background"
-    android:clickable="true"
-    android:foreground="?selectableItemBackground">
+    tools:background="@color/black_background">
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/cvPoster"
@@ -45,8 +43,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:fontFamily="@font/sfui_text"
-        android:letterSpacing="-0.01"
-        android:textColor="@color/white"
+        android:textColor="@color/white_40"
         android:textSize="13sp"
         android:textStyle="normal"
         app:layout_constraintStart_toStartOf="@+id/tvTitle"
@@ -56,14 +53,18 @@
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnAdd"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/material_btn_height"
         android:fontFamily="@font/sfui_text_regular"
         android:textColor="@color/white"
         android:textSize="12sp"
         android:textStyle="normal"
+        android:insetTop="0dp"
+        android:insetBottom="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        app:backgroundTint="@color/white_30"
+        app:strokeColor="@color/white_30"
         android:text="@string/add_movie" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

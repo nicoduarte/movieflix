@@ -32,25 +32,28 @@ class SearchActivity : BaseActivity() {
 
         toolbarToLoad(toolbar)
         enableHomeDisplay(true)
+        setupRecycler()
 
+        viewModel.getMovieLiveData().observe(this, { observerLiveData(it) })
+    }
+
+    private fun setupRecycler() {
         rvSearchMovies.adapter = SearchAdapter(mutableListOf()) {
             startActivity(
-                Intent(this, MovieDetailActivity::class.java)
-                    .putExtra(MovieDetailActivity.EXTRA_MOVIE, it)
+                    Intent(this, MovieDetailActivity::class.java)
+                            .putExtra(MovieDetailActivity.EXTRA_MOVIE, it)
             )
         }
         rvSearchMovies.addItemDecoration(
-            EqualSpacingItemDecoration(
-            32,
-            EqualSpacingItemDecoration.VERTICAL
-        ))
+                EqualSpacingItemDecoration(
+                        32,
+                        EqualSpacingItemDecoration.VERTICAL
+                ))
         rvSearchMovies.addItemDecoration(
-            DividerItemDecoration(
-                this,
-                DividerItemDecoration.VERTICAL)
+                DividerItemDecoration(
+                        this,
+                        DividerItemDecoration.VERTICAL)
         )
-
-        viewModel.getMovieLiveData().observe(this, { observerLiveData(it) })
     }
 
     private fun observerLiveData(result: Result<List<Movie>>) {
@@ -88,7 +91,6 @@ class SearchActivity : BaseActivity() {
             }
 
             override fun onQueryTextChange(s: String): Boolean {
-//                viewModel.searchMovies(s)
                 return false
             }
         })
