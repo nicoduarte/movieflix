@@ -130,7 +130,7 @@
                     android:textSize="16sp"
                     android:textColor="@color/white"
                     android:letterSpacing="-0.02"
-                    android:text="@string/btn_subscription"
+                    android:text="@string/btn_subscribe"
                     android:layout_marginTop="@dimen/margin_16dp"
                     android:paddingHorizontal="@dimen/padding_32dp"
                     app:strokeColor="@color/white"

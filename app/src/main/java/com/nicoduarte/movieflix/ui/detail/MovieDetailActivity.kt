@@ -5,7 +5,6 @@ import android.content.res.ColorStateList
 import android.graphics.Bitmap
 import android.os.Bundle
 import androidx.annotation.Nullable
-import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.palette.graphics.Palette
 import com.bumptech.glide.load.DataSource
@@ -37,7 +36,16 @@ class MovieDetailActivity : BaseActivity(), AppBarLayout.OnOffsetChangedListener
         movie?.let { loadMovie(it) }
 
         appBar.addOnOffsetChangedListener(this)
-        btnSubscribe.setOnClickListener { }
+        btnSubscribe.setOnClickListener {
+            movie?.let {
+                if(movie.isSubscribed) {
+                    btnSubscribe.setText(R.string.btn_subscribe)
+                } else {
+                    btnSubscribe.setText(R.string.btn_subscribed)
+                }
+                movie.isSubscribed = !movie.isSubscribed
+            }
+        }
     }
 
     override fun onOffsetChanged(appBarLayout: AppBarLayout, verticalOffset: Int) {
