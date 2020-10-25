@@ -6,6 +6,7 @@ import android.graphics.Bitmap
 import android.os.Bundle
 import androidx.annotation.Nullable
 import androidx.core.content.ContextCompat
+import androidx.core.view.ViewCompat
 import androidx.palette.graphics.Palette
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.DiskCacheStrategy
@@ -24,6 +25,7 @@ import kotlinx.android.synthetic.main.activity_movie_detail.*
 
 
 class MovieDetailActivity : BaseActivity(), AppBarLayout.OnOffsetChangedListener {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_movie_detail)
@@ -40,10 +42,23 @@ class MovieDetailActivity : BaseActivity(), AppBarLayout.OnOffsetChangedListener
 
     override fun onOffsetChanged(appBarLayout: AppBarLayout, verticalOffset: Int) {
         val offsetAlpha = appBarLayout.y / appBarLayout.totalScrollRange
-        val scaleDownX = ObjectAnimator.ofFloat(cvPoster, "scaleX", offsetAlpha + 1)
-        val scaleDownY = ObjectAnimator.ofFloat(cvPoster, "scaleY", offsetAlpha + 1)
-        scaleDownX.setDuration(0).start()
-        scaleDownY.setDuration(0).start()
+        when {
+            offsetAlpha == 0f -> {
+                ViewCompat.setNestedScrollingEnabled(nestedScrollView, true)
+            }
+            offsetAlpha > -0.5 -> {
+                val scaleDownX = ObjectAnimator.ofFloat(cvPoster, "scaleX", offsetAlpha + 1)
+                val scaleDownY = ObjectAnimator.ofFloat(cvPoster, "scaleY", offsetAlpha + 1)
+                scaleDownX.setDuration(0).start()
+                scaleDownY.setDuration(0).start()
+
+                val alphaTitle = ObjectAnimator.ofFloat(tvTitle, "alpha", offsetAlpha + 1)
+                val alphaDate = ObjectAnimator.ofFloat(tvReleaseDate, "alpha", offsetAlpha + 1)
+                alphaTitle.setDuration(0).start()
+                alphaDate.setDuration(0).start()
+            }
+            else -> ViewCompat.setNestedScrollingEnabled(nestedScrollView, false)
+        }
     }
 
     private fun loadMovie(movie: Movie) {

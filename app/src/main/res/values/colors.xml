@@ -20,4 +20,7 @@
     <color name="black_background">#1b1b1b</color>
     <color name="background_text_80">#CC1e2b31</color>
     <color name="white_70">#B3FFFFFF</color>
+    <color name="white_30">#4DFFFFFF</color>
+    <color name="white_40">#66FFFFFF</color>
+    <color name="gray_divider">#4D979797</color>
 </resources>

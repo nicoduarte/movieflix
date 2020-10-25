@@ -69,5 +69,6 @@ data class Movie(
     @SerializedName("genre_ids")
     @Expose
     var genreIds: List<Int>? = null,
-    var genre: Genre? = null
+    var genre: Genre? = null,
+    var isSubscribed: Boolean = false
 ): Parcelable

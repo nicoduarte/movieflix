@@ -9,17 +9,17 @@ import com.nicoduarte.movieflix.ui.utils.inflate
 class SubscriptionAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>()  {
 
     override fun onCreateViewHolder(parent: ViewGroup, p1: Int): RecyclerView.ViewHolder {
-        return MoviewHolder(parent.inflate(R.layout.item_movie_subscription))
+        return MovieHolder(parent.inflate(R.layout.item_movie_subscription))
     }
 
     override fun getItemCount() = 10
 
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        (holder as MoviewHolder).bind()
+        (holder as MovieHolder).bind()
     }
 
-    inner class MoviewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    inner class MovieHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         fun bind(
         ) = with(itemView) {
 
