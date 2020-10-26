@@ -101,7 +101,7 @@ class MovieDetailActivity : BaseActivity(), AppBarLayout.OnOffsetChangedListener
                             val palette = Palette.from(resource).generate()
                             palette.dominantSwatch?.rgb?.let {
                                 ivBackground.setBackgroundColor(
-                                    ivBackground.colorPalette(it)
+                                    colorPalette(it)
                                 )
                                 collapsingToolbar.setContentScrimColor(it)
                             }

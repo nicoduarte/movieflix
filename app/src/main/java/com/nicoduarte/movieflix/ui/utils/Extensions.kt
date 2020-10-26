@@ -5,6 +5,7 @@ import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AccelerateDecelerateInterpolator
 import android.widget.ImageView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
@@ -12,7 +13,6 @@ import com.google.android.material.snackbar.Snackbar
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.math.min
-import kotlin.math.roundToInt
 
 
 fun ViewGroup.inflate(layoutId: Int) = LayoutInflater.from(context).inflate(layoutId, this, false)!!
@@ -25,6 +25,8 @@ fun Date.toSimpleString() : String {
 fun View.visible() { visibility = View.VISIBLE }
 
 fun View.gone() { visibility = View.GONE }
+
+fun View.invisible() { visibility = View.INVISIBLE }
 
 fun ImageView.loadImage(url: String?, placeHolder: Int, circleCrop: Boolean = false) {
     var requestOptions = RequestOptions().placeholder(placeHolder)
@@ -52,7 +54,7 @@ fun getDateFormatted(strDate: String?, formatOrigin: String?): String {
     }
 }
 
-fun ImageView.colorPalette(color: Int): Int {
+fun colorPalette(color: Int): Int {
     val a: Int = 225
     val r = Color.red(color)
     val g = Color.green(color)
@@ -63,4 +65,20 @@ fun ImageView.colorPalette(color: Int): Int {
         min(g, 255),
         min(b, 255)
     )
+}
+
+fun View.show() {
+    alpha = 0f
+    scaleX = 0f
+    scaleY = 0f
+
+    animate()?.cancel()
+    animate().apply {
+        scaleX(1f)
+        scaleY(1f)
+        alpha(1f)
+        duration = 2000L
+        interpolator = AccelerateDecelerateInterpolator()
+        withEndAction { visible() }
+    }
 }
