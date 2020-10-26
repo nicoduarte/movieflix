@@ -16,6 +16,7 @@ import kotlinx.android.synthetic.main.item_main_movie.view.*
 
 class MovieAdapter(
         private var items: MutableList<Movie>,
+        private var itemsSubscribed: MutableList<Movie>,
         private val clickListener: (Movie) -> Unit)
     : RecyclerView.Adapter<MovieAdapter.BaseHolder<*>>()  {
 
@@ -42,7 +43,7 @@ class MovieAdapter(
 
     override fun onBindViewHolder(holder: BaseHolder<*>, position: Int) {
         when(getItemViewType(position)) {
-            ITEM_SUBSCRIPTION -> (holder as MovieSubscriptionHolder).bind(emptyList())
+            ITEM_SUBSCRIPTION -> (holder as MovieSubscriptionHolder).bind(itemsSubscribed)
             ITEM_TITLE -> (holder as TitleHolder).bind("")
             ITEM_MOVIE -> {
                 (holder as MovieHolder).bind(items[position])
@@ -68,16 +69,28 @@ class MovieAdapter(
         }
     }
 
-    inner class MovieSubscriptionHolder(itemView: View) : BaseHolder<List<String>>(itemView) {
+    fun addSubscribedMovies(movies: List<Movie>) {
+        itemsSubscribed.addAll(movies)
+        notifyItemInserted(0)
+    }
+
+    inner class MovieSubscriptionHolder(itemView: View) : BaseHolder<List<Movie>>(itemView) {
 
         init {
-            itemView.rvMoviesSubscription.adapter = SubscriptionAdapter()
+            itemView.rvMoviesSubscription.adapter = SubscriptionAdapter(mutableListOf()) {
+                clickListener(it)
+            }
             val snapHelper = LinearSnapHelper()
             snapHelper.attachToRecyclerView(itemView.rvMoviesSubscription)
         }
 
-        public override fun bind(data: List<String>) = with(itemView) {
-
+        public override fun bind(data: List<Movie>) = with(itemView) {
+            if(data.isEmpty())
+                itemView.gone()
+            else {
+                (rvMoviesSubscription.adapter as SubscriptionAdapter)
+                    .addMovies(data)
+            }
         }
     }
 

@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -27,10 +28,19 @@ class MainActivity : BaseActivity() {
         toolbarToLoad(toolbar)
         setupList()
         viewModel.getMoviesLiveData().observe(this, { observerLiveData(it) })
+        viewModel.getMoviesSubscribedLiveData().observe(this, { observerSubscribedLiveData(it) })
     }
 
-    private fun observerLiveData(result: Result<List<Movie>>) {
-        result.setState({
+    private fun observerSubscribedLiveData(results: Result<List<Movie>>) {
+        results.setState({
+            (rvMovies.adapter as MovieAdapter).addSubscribedMovies(it)
+        }, {
+            showMessage(rootView, it)
+        }, {})
+    }
+
+    private fun observerLiveData(results: Result<List<Movie>>) {
+        results.setState({
             (rvMovies.adapter as MovieAdapter).addMovies(it)
         }, {
             showMessage(rootView, it)
@@ -38,7 +48,7 @@ class MainActivity : BaseActivity() {
     }
 
     private fun setupList() {
-        rvMovies.adapter = MovieAdapter(mutableListOf()) { goToDetail(it) }
+        rvMovies.adapter = MovieAdapter(mutableListOf(), mutableListOf()) { goToDetail(it) }
         rvMovies.addItemDecoration(
             EqualSpacingItemDecoration(
                 resources.getDimensionPixelOffset(R.dimen.margin_8dp),

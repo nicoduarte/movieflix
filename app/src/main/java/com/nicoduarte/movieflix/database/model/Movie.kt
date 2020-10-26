@@ -1,12 +1,9 @@
 package com.nicoduarte.movieflix.database.model
 
 import android.os.Parcelable
-import androidx.room.ColumnInfo
-import androidx.room.Entity
-import androidx.room.PrimaryKey
+import androidx.room.*
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
-import com.nicoduarte.movieflix.database.model.Genre
 import kotlinx.android.parcel.Parcelize
 
 
@@ -66,9 +63,12 @@ data class Movie(
     @SerializedName("vote_average")
     @Expose
     var voteAverage: Double? = null,
+    @ColumnInfo(name = "genre_ids")
     @SerializedName("genre_ids")
     @Expose
     var genreIds: List<Int>? = null,
+    @ColumnInfo(name = "genre")
     var genre: Genre? = null,
+    @ColumnInfo(name = "is_subscribed")
     var isSubscribed: Boolean = false
 ): Parcelable

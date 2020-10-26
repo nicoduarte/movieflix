@@ -15,8 +15,24 @@ class MainViewModel(
 
     private val compositeDisposable = CompositeDisposable()
     private val movies = MutableLiveData<Result<List<Movie>>>()
+    private val moviesSubscribed = MutableLiveData<Result<List<Movie>>>()
 
-    init { getMovies() }
+    init {
+        getMovies()
+        getSubscribedMovies()
+    }
+
+    private fun getSubscribedMovies() {
+        val disposable = movieRepository.getSubscribedMovies()
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeOn(Schedulers.io())
+            .subscribe(this::onSuccessSubscribed, this::onErrorMovies)
+        compositeDisposable.add(disposable)
+    }
+
+    private fun onSuccessSubscribed(list: List<Movie>) {
+        moviesSubscribed.postValue(Result.success(list))
+    }
 
     fun getMovies(page: Int = 1) {
         movies.postValue(Result.loading())
@@ -36,6 +52,8 @@ class MainViewModel(
     }
 
     fun getMoviesLiveData(): LiveData<Result<List<Movie>>> = movies
+
+    fun getMoviesSubscribedLiveData(): LiveData<Result<List<Movie>>> = moviesSubscribed
 
     override fun onCleared() {
         compositeDisposable.clear()

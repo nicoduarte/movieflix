@@ -4,6 +4,7 @@ import android.animation.ObjectAnimator
 import android.content.res.ColorStateList
 import android.graphics.Bitmap
 import android.os.Bundle
+import androidx.activity.viewModels
 import androidx.annotation.Nullable
 import androidx.core.view.ViewCompat
 import androidx.palette.graphics.Palette
@@ -25,6 +26,9 @@ import kotlinx.android.synthetic.main.activity_movie_detail.*
 
 class MovieDetailActivity : BaseActivity(), AppBarLayout.OnOffsetChangedListener {
 
+    private val viewModelFactory by lazy { ViewModelFactory(application) }
+    private val viewModel by viewModels<DetailViewModel> { viewModelFactory }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_movie_detail)
@@ -44,6 +48,7 @@ class MovieDetailActivity : BaseActivity(), AppBarLayout.OnOffsetChangedListener
                     btnSubscribe.setText(R.string.btn_subscribed)
                 }
                 movie.isSubscribed = !movie.isSubscribed
+                viewModel.insertMovie(movie)
             }
         }
     }
