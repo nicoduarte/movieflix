@@ -7,9 +7,9 @@ Aplicación Android de peliculas realizada como muesta de conceptos utilizando T
 ## Features
 Esta app contiene 3 pantallas:
 
-![alt text](https://github.com/nicoduarte/movieflix/blob/master/art/listado.png)
-![alt text](https://github.com/nicoduarte/movieflix/blob/master/art/detalle.png)
-![alt text](https://github.com/nicoduarte/movieflix/blob/master/art/busqueda.png)
+![alt text](https://github.com/nicoduarte/movieflix/blob/main/art/listado.png)
+![alt text](https://github.com/nicoduarte/movieflix/blob/main/art/detalle.png)
+![alt text](https://github.com/nicoduarte/movieflix/blob/main/art/busqueda.png)
 
 * Lista de peliculas
 * Detalle de pelicula
