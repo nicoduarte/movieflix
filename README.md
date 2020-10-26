@@ -7,18 +7,14 @@ Aplicación Android de peliculas realizada como muesta de conceptos utilizando T
 ## Features
 Esta app contiene 3 pantallas:
 
-![alt text](https://github.com/nicoduarte/movieflix/blob/main/art/listado.png)
-![alt text](https://github.com/nicoduarte/movieflix/blob/main/art/detalle.png)
-![alt text](https://github.com/nicoduarte/movieflix/blob/main/art/busqueda.png)
-
-* Lista de peliculas
-* Detalle de pelicula
-* Búsqueda de peliculas
+| Listado  | Detalle | Busqueda |
+:---------:|:--------:|:-------:|
+| ![listado](https://github.com/nicoduarte/movieflix/blob/main/art/listado.png) | ![detalle](https://github.com/nicoduarte/movieflix/blob/main/art/detalle.png) | ![busqueda](https://github.com/nicoduarte/movieflix/blob/main/art/busqueda.png) |
 
 ## Arquitectura utilizada
 Se empleó la arquitectura MVVM (Model-View-ViewModel) como capa de presentación.
 
-Activity / Fragment: Es el encargado de mostrar datos y enviar enventos de UI. La vista y el viewModel se comunican usando LiveData.
+**Activity / Fragment:** Es el encargado de mostrar datos y enviar enventos de UI. La vista y el viewModel se comunican usando LiveData.
 LiveData es un observable que notifica a la UI por actualizaciones. Es tambien consciente del ciclo de vida y esto evita crashes parando las actualizaciones
 
 Las clases son: 
@@ -27,7 +23,7 @@ Las clases son:
 * SearchActivity
     
     
-ViewModel: Prepara los datos para su visualizacion en la UI y reacciona a las interacciones del usuario.
+**ViewModel:** Prepara los datos para su visualizacion en la UI y reacciona a las interacciones del usuario.
 La vista se subscribe al correspondiente LiveData.
 
 Las clases son: 
@@ -35,13 +31,13 @@ Las clases son:
 * DetailViewModel 
 * SearchViewModel
   
-Repository: Es el encargado de obtener los datos ya sea localmente o alojado en la nube.
+**Repository:** Es el encargado de obtener los datos ya sea localmente o alojado en la nube.
 * Clase: MovieRepository
   
-Database: Almacena los datos localmente. Fuente de datos SQLite usando objetos. Se utilizó Room y RxJava
+**Database:** Almacena los datos localmente. Fuente de datos SQLite usando objetos. Se utilizó Room y RxJava2
 * Clase: MovieDatabase
   
-Remote data: Comunicación con backend usando Retrofit y RxJava
+**Remote data:** Comunicación con backend usando Retrofit y RxJava2
 * Clase: ApiService
 
 ## Testing
