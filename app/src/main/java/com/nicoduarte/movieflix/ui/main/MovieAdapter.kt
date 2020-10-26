@@ -11,13 +11,15 @@ import com.nicoduarte.movieflix.database.model.Movie
 import com.nicoduarte.movieflix.ui.utils.gone
 import com.nicoduarte.movieflix.ui.utils.inflate
 import com.nicoduarte.movieflix.ui.utils.loadImage
+import com.nicoduarte.movieflix.ui.utils.visible
 import kotlinx.android.synthetic.main.item_inner_recycler.view.*
 import kotlinx.android.synthetic.main.item_main_movie.view.*
 
 class MovieAdapter(
-        private var items: MutableList<Movie>,
-        private var itemsSubscribed: MutableList<Movie>,
-        private val clickListener: (Movie) -> Unit)
+    private var items: MutableList<Movie>,
+    private var itemsSubscribed: MutableList<Movie>,
+    private val clickListener: (Movie) -> Unit
+)
     : RecyclerView.Adapter<MovieAdapter.BaseHolder<*>>()  {
 
     private var lastPosition = -1
@@ -70,8 +72,8 @@ class MovieAdapter(
     }
 
     fun addSubscribedMovies(movies: List<Movie>) {
-        itemsSubscribed.addAll(movies)
-        notifyItemInserted(0)
+        itemsSubscribed = movies.toMutableList()
+        notifyItemChanged(0)
     }
 
     inner class MovieSubscriptionHolder(itemView: View) : BaseHolder<List<Movie>>(itemView) {
@@ -85,9 +87,17 @@ class MovieAdapter(
         }
 
         public override fun bind(data: List<Movie>) = with(itemView) {
-            if(data.isEmpty())
-                itemView.gone()
+            if(data.isEmpty()) {
+                gone()
+                layoutParams = RecyclerView.LayoutParams(0, 0)
+            }
             else {
+                layoutParams = RecyclerView.LayoutParams(
+                    ViewGroup.LayoutParams.MATCH_PARENT,
+                    ViewGroup.LayoutParams.WRAP_CONTENT
+                )
+
+                visible()
                 (rvMoviesSubscription.adapter as SubscriptionAdapter)
                     .addMovies(data)
             }

@@ -3,6 +3,7 @@ package com.nicoduarte.movieflix.database
 import androidx.room.*
 import com.nicoduarte.movieflix.database.model.Movie
 import io.reactivex.Completable
+import io.reactivex.Flowable
 import io.reactivex.Single
 
 @Dao
@@ -14,7 +15,7 @@ interface MovieDao {
     fun delete(movie: Movie): Single<Int>
 
     @Query("SELECT * from movie_table ORDER BY vote_count DESC")
-    fun getMovies(): Single<List<Movie>>
+    fun getMovies(): Flowable<List<Movie>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertAll(movies: List<Movie>)

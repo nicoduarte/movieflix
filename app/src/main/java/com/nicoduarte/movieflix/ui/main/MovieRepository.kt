@@ -8,6 +8,7 @@ import com.nicoduarte.movieflix.database.MovieDatabase
 import com.nicoduarte.movieflix.database.model.Genre
 import com.nicoduarte.movieflix.database.model.Movie
 import io.reactivex.Completable
+import io.reactivex.Flowable
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -77,8 +78,7 @@ class MovieRepository(
             .subscribeOn(Schedulers.io())
     }
 
-    fun getSubscribedMovies(): Observable<List<Movie>> {
+    fun getSubscribedMovies(): Flowable<List<Movie>> {
         return movieDao.getMovies()
-            .toObservable()
     }
 }

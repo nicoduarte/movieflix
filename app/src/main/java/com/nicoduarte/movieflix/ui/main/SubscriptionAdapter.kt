@@ -27,8 +27,8 @@ class SubscriptionAdapter(
     }
 
     fun addMovies(data: List<Movie>) {
-        items.addAll(data)
-        notifyItemRangeInserted(0, items.size)
+        items = data.toMutableList()
+        notifyDataSetChanged()
     }
 
     inner class MovieHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {

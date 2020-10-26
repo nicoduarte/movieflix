@@ -18,8 +18,6 @@ class SearchAdapter(
 )
     : RecyclerView.Adapter<RecyclerView.ViewHolder>()  {
 
-    val onClickListener: ((Movie) -> Unit)? = null
-
     override fun onCreateViewHolder(parent: ViewGroup, p1: Int): RecyclerView.ViewHolder {
         return MovieHolder(parent.inflate(R.layout.item_search_movie))
     }
@@ -65,6 +63,7 @@ class SearchAdapter(
             setOnClickListener { clickListener(movie) }
             btnAdd.setOnClickListener {
                 movie.isSubscribed = !movie.isSubscribed
+                clickButtonListener(movie)
                 movieList[adapterPosition] = movie
                 notifyItemChanged(adapterPosition)
             }
