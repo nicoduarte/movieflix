@@ -24,8 +24,6 @@ class MainViewModel(
 
     private fun getSubscribedMovies() {
         val disposable = movieRepository.getSubscribedMovies()
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribeOn(Schedulers.io())
             .subscribe(this::onSuccessSubscribed, this::onErrorMovies)
         compositeDisposable.add(disposable)
     }
@@ -37,8 +35,6 @@ class MainViewModel(
     fun getMovies(page: Int = 1) {
         movies.postValue(Result.loading())
         val disposable = movieRepository.getMovies(page)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.io())
                 .subscribe(this::onSuccessMovies, this::onErrorMovies)
         compositeDisposable.add(disposable)
     }

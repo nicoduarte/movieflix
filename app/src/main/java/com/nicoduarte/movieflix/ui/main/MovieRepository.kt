@@ -2,10 +2,11 @@ package com.nicoduarte.movieflix.ui.main
 
 import android.app.Application
 import com.nicoduarte.movieflix.api.ApiService
+import com.nicoduarte.movieflix.api.response.GenreResponse
+import com.nicoduarte.movieflix.api.response.MovieResponse
 import com.nicoduarte.movieflix.database.GenreDao
 import com.nicoduarte.movieflix.database.MovieDao
 import com.nicoduarte.movieflix.database.MovieDatabase
-import com.nicoduarte.movieflix.database.model.Genre
 import com.nicoduarte.movieflix.database.model.Movie
 import io.reactivex.Completable
 import io.reactivex.Flowable
@@ -34,17 +35,9 @@ class MovieRepository(
         val moviesRequest = ApiService.getInstance()
                 .getUpcoming(ApiService.API_KEY, page)
 
-        return Observable.zip(genresRequest, moviesRequest,
-            BiFunction { genresResponse, moviesResponse ->
-                val movies = moviesResponse.movies
-                movies.forEach { movie ->
-                    if (!movie.genreIds.isNullOrEmpty())
-                        movie.genre =
-                            genresResponse.genres.find { movie.genreIds?.first() == it.id }
-                    else movie.genre = Genre(1, "")
-                }
-                return@BiFunction movies
-            })
+        return getList(genresRequest, moviesRequest)
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeOn(Schedulers.io())
     }
 
     fun searchMovies(query: String): Observable<List<Movie>> {
@@ -54,6 +47,13 @@ class MovieRepository(
         val moviesRequest = ApiService.getInstance()
             .searchMovies(ApiService.API_KEY, query)
 
+        return getList(genresRequest, moviesRequest)
+    }
+
+    private fun getList(
+        genresRequest: Observable<GenreResponse>,
+        moviesRequest: Observable<MovieResponse>
+    ): Observable<List<Movie>> {
         return Observable.zip(genresRequest, moviesRequest,
             BiFunction { genresResponse, moviesResponse ->
                 val movies = moviesResponse.movies
@@ -80,5 +80,7 @@ class MovieRepository(
 
     fun getSubscribedMovies(): Flowable<List<Movie>> {
         return movieDao.getMovies()
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeOn(Schedulers.io())
     }
 }

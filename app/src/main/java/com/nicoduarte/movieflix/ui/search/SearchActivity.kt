@@ -41,10 +41,7 @@ class SearchActivity : BaseActivity() {
 
     private fun setupRecycler() {
         rvSearchMovies.adapter = SearchAdapter(mutableListOf(), {
-            startActivity(
-                    Intent(this, MovieDetailActivity::class.java)
-                            .putExtra(MovieDetailActivity.EXTRA_MOVIE, it)
-            )
+            goToDetail(it)
         }, {
             viewModel.insertOrDelete(it)
         })
@@ -109,6 +106,17 @@ class SearchActivity : BaseActivity() {
         })
         searchView.isIconified = false
         return true
+    }
+
+    private fun goToDetail(movie: Movie) {
+        startActivity(
+            Intent(
+                this,
+                MovieDetailActivity::class.java
+            )
+                .putExtra(MovieDetailActivity.EXTRA_MOVIE, movie)
+        )
+        overridePendingTransition(R.anim.anim_slide_in_right, R.anim.anim_slide_out_left)
     }
 
     override fun onBackPressed() {

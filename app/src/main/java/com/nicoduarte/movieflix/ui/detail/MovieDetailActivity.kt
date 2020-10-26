@@ -131,6 +131,11 @@ class MovieDetailActivity : BaseActivity(), AppBarLayout.OnOffsetChangedListener
         changeTextButton(movie.isSubscribed)
     }
 
+    override fun onBackPressed() {
+        super.onBackPressed()
+        overridePendingTransition(R.anim.anim_slide_in_left, R.anim.anim_slide_out_right)
+    }
+
     private fun changeTextButton(isSubscribed: Boolean) {
         if(isSubscribed) {
             btnSubscribe.text = getString(R.string.btn_subscribed)
