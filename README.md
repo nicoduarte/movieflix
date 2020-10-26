@@ -1,5 +1,5 @@
 # Movieflix App
-Aplicación Android de peliculas realizada como muesta de conceptos utilizando The Movie Database API.
+Aplicación Android de peliculas realizada como muestra de conceptos utilizando The Movie Database API.
 
 ## Instalación
 * Android Studio 4.1
