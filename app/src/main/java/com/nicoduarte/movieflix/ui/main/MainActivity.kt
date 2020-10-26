@@ -29,6 +29,7 @@ class MainActivity : BaseActivity() {
         setupList()
         viewModel.getMoviesLiveData().observe(this, { observerLiveData(it) })
         viewModel.getMoviesSubscribedLiveData().observe(this, { observerSubscribedLiveData(it) })
+        btnTryAgain.setOnClickListener { viewModel.getMovies() }
     }
 
     private fun observerSubscribedLiveData(results: Result<List<Movie>>) {
@@ -41,9 +42,12 @@ class MainActivity : BaseActivity() {
 
     private fun observerLiveData(results: Result<List<Movie>>) {
         results.setState({
+            containerNoConexion.gone()
+            rvMovies.visible()
             (rvMovies.adapter as MovieAdapter).addMovies(it)
         }, {
-            showMessage(rootView, it)
+            containerNoConexion.visible()
+            rvMovies.gone()
         }, {})
     }
 
