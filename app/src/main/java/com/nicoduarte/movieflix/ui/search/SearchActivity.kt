@@ -40,12 +40,15 @@ class SearchActivity : BaseActivity() {
     }
 
     private fun setupRecycler() {
-        rvSearchMovies.adapter = SearchAdapter(mutableListOf()) {
+        rvSearchMovies.adapter = SearchAdapter(mutableListOf(), {
             startActivity(
                     Intent(this, MovieDetailActivity::class.java)
                             .putExtra(MovieDetailActivity.EXTRA_MOVIE, it)
             )
-        }
+        }, {
+            viewModel.insertOrDelete(it)
+        })
+
         rvSearchMovies.addItemDecoration(
                 EqualSpacingItemDecoration(
                         resources.getDimensionPixelOffset(R.dimen.margin_8dp),

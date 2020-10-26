@@ -38,4 +38,17 @@ class SearchViewModel(
     private fun onErrorMovies(error: Throwable) {
         moviesLiveData.postValue(Result.error(message = error.message))
     }
+
+    fun insertOrDelete(movie: Movie) {
+        if(movie.isSubscribed)
+            repository.insertMovie(movie)
+                .subscribe(this::onSuccessDelete, this::onErrorMovies)
+        else
+            repository.delete(movie)
+                .subscribe(this::onSuccessDelete, this::onErrorMovies)
+    }
+
+    private fun onSuccessDelete() {}
+
+    private fun onSuccessDelete(id: Int) {}
 }

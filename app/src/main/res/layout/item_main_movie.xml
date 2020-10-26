@@ -58,7 +58,7 @@
             android:ellipsize="end"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/tvCategory"
             android:paddingHorizontal="@dimen/padding_8dp"
             android:layout_marginStart="@dimen/margin_16dp"
             android:layout_marginBottom="@dimen/margin_16dp"/>

@@ -13,9 +13,12 @@ import kotlinx.android.synthetic.main.item_search_movie.view.*
 
 class SearchAdapter(
     private var movieList: MutableList<Movie>,
-    private val clickListener: (Movie) -> Unit
+    private val clickListener: (Movie) -> Unit,
+    private val clickButtonListener: (Movie) -> Unit
 )
     : RecyclerView.Adapter<RecyclerView.ViewHolder>()  {
+
+    val onClickListener: ((Movie) -> Unit)? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, p1: Int): RecyclerView.ViewHolder {
         return MovieHolder(parent.inflate(R.layout.item_search_movie))
@@ -35,12 +38,6 @@ class SearchAdapter(
         notifyItemRangeInserted(0, movieList.size)
     }
 
-    fun addMovies(list: List<Movie>) {
-        val positionStart = list.size
-        movieList.addAll(list)
-        notifyItemRangeInserted(positionStart, movieList.size)
-    }
-
     inner class MovieHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         fun bind(movie: Movie) = with(itemView) {
             tvTitle.text = movie.title
@@ -51,14 +48,18 @@ class SearchAdapter(
             )
 
             if(movie.isSubscribed) {
-                btnAdd.setBackgroundResource(R.drawable.bg_btn_added)
-                btnAdd.setTextColor(ContextCompat.getColor(btnAdd.context, R.color.black_background))
-                btnAdd.setText(R.string.added_movie)
+                btnAdd.apply {
+                    setBackgroundResource(R.drawable.bg_btn_added)
+                    setTextColor(ContextCompat.getColor(btnAdd.context, R.color.black_background))
+                    setText(R.string.added_movie)
+                }
             }
             else {
-                btnAdd.setBackgroundResource(R.drawable.bg_btn_add)
-                btnAdd.setTextColor(ContextCompat.getColor(btnAdd.context, R.color.white_30))
-                btnAdd.setText(R.string.add_movie)
+                btnAdd.apply {
+                    setBackgroundResource(R.drawable.bg_btn_add)
+                    setTextColor(ContextCompat.getColor(btnAdd.context, R.color.white_30))
+                    setText(R.string.add_movie)
+                }
             }
 
             setOnClickListener { clickListener(movie) }

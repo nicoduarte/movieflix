@@ -42,13 +42,9 @@ class MovieDetailActivity : BaseActivity(), AppBarLayout.OnOffsetChangedListener
         appBar.addOnOffsetChangedListener(this)
         btnSubscribe.setOnClickListener {
             movie?.let {
-                if(movie.isSubscribed) {
-                    btnSubscribe.setText(R.string.btn_subscribe)
-                } else {
-                    btnSubscribe.setText(R.string.btn_subscribed)
-                }
                 movie.isSubscribed = !movie.isSubscribed
-                viewModel.insertMovie(movie)
+                viewModel.insertOrDelete(movie)
+                changeTextButton(movie.isSubscribed)
             }
         }
     }
@@ -131,6 +127,16 @@ class MovieDetailActivity : BaseActivity(), AppBarLayout.OnOffsetChangedListener
             ApiService.IMAGE_BASE_URL.plus(movie.posterPath),
             R.drawable.placeholder_movie
         )
+
+        changeTextButton(movie.isSubscribed)
+    }
+
+    private fun changeTextButton(isSubscribed: Boolean) {
+        if(isSubscribed) {
+            btnSubscribe.text = getString(R.string.btn_subscribed)
+        } else {
+            btnSubscribe.text = getString(R.string.btn_subscribe)
+        }
     }
 
     companion object {

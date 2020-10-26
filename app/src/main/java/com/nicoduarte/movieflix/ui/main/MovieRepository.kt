@@ -10,7 +10,9 @@ import com.nicoduarte.movieflix.database.model.Movie
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
+import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.functions.BiFunction
+import io.reactivex.schedulers.Schedulers
 
 class MovieRepository(
     application: Application
@@ -65,10 +67,14 @@ class MovieRepository(
 
     fun insertMovie(movie: Movie): Completable {
         return movieDao.insert(movie)
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeOn(Schedulers.io())
     }
 
     fun delete(movie: Movie): Single<Int> {
         return movieDao.delete(movie)
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeOn(Schedulers.io())
     }
 
     fun getSubscribedMovies(): Observable<List<Movie>> {
