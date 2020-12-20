@@ -39,27 +39,27 @@ class MovieDaoTest {
     }
 
 
-    @Test
-    @Throws(InterruptedException::class)
-    fun getMoviesAfterInserted() {
-        // When inserting movies in the data source
-        movieDao.insertAll(TestData.MOVIES)
-
-        // When subscribing to the emissions of the movies
-        movieDao.getMovies()
-            .test()
-            .assertValue { it.size ==  TestData.MOVIES.size}
-    }
-
-
-    @Test
-    fun searchMoviesWhenMatchTitle() {
-        // When inserting movies in the data source
-        movieDao.insertAll(TestData.MOVIES)
-
-        database.movieDao().searchMovies("aquaman")
-            .test()
-            .assertValue { it.size ==  1 && it[0].id == TestData.MOVIE_ENTITY2.id}
-    }
+//    @Test
+//    @Throws(InterruptedException::class)
+//    fun getMoviesAfterInserted() {
+//        // When inserting movies in the data source
+//        movieDao.insertAll(TestData.MOVIES)
+//
+//        // When subscribing to the emissions of the movies
+//        movieDao.getMovies()
+//            .test()
+//            .assertValue { it.size ==  TestData.MOVIES.size}
+//    }
+//
+//
+//    @Test
+//    fun searchMoviesWhenMatchTitle() {
+//        // When inserting movies in the data source
+//        movieDao.insertAll(TestData.MOVIES)
+//
+//        database.movieDao().searchMovies("aquaman")
+//            .test()
+//            .assertValue { it.size ==  1 && it[0].id == TestData.MOVIE_ENTITY2.id}
+//    }
 
 }

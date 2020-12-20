@@ -3,18 +3,18 @@ package com.nicoduarte.movieflix.ui.main
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.nicoduarte.movieflix.database.model.Movie
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.schedulers.Schedulers
 import com.nicoduarte.movieflix.api.Result
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class MainViewModel(
     private val movieRepository: MovieRepository
 ) : ViewModel() {
-
-    private val compositeDisposable = CompositeDisposable()
-    private val movies = MutableLiveData<Result<List<Movie>>>()
+    private val moviesLiveData = MutableLiveData<Result<List<Movie>>>()
     private val moviesSubscribed = MutableLiveData<Result<List<Movie>>>()
 
     init {
@@ -22,37 +22,32 @@ class MainViewModel(
         getSubscribedMovies()
     }
 
-    private fun getSubscribedMovies() {
-        val disposable = movieRepository.getSubscribedMovies()
-            .subscribe(this::onSuccessSubscribed, this::onErrorMovies)
-        compositeDisposable.add(disposable)
+    private fun getSubscribedMovies() = viewModelScope.launch {
+        val movies = withContext(Dispatchers.IO) { movieRepository.getSubscribedMovies() }
+        moviesSubscribed.value = Result.success(movies)
     }
 
-    private fun onSuccessSubscribed(list: List<Movie>) {
-        moviesSubscribed.postValue(Result.success(list))
-    }
+    fun getMovies(page: Int = 1) = viewModelScope.launch {
+        moviesLiveData.value = Result.loading()
+        val moviesResponse = withContext(Dispatchers.IO) { movieRepository.getMovies(page) }
+        val genresResponse = async { movieRepository.getGenres() }
 
-    fun getMovies(page: Int = 1) {
-        movies.postValue(Result.loading())
-        val disposable = movieRepository.getMovies(page)
-                .subscribe(this::onSuccessMovies, this::onErrorMovies)
-        compositeDisposable.add(disposable)
+        val movies = moviesResponse.movies
+        val genres = genresResponse.await().genres
+
+        movies.forEach { movie ->
+            if (!movie.genreIds.isNullOrEmpty())
+                movie.genre = genres.find { movie.genreIds!!.first() == it.id }
+        }
+
+        moviesLiveData.value = Result.success(movies)
     }
 
     private fun onErrorMovies(error: Throwable) {
-        movies.postValue(Result.error(message = error.message))
+        moviesLiveData.postValue(Result.error(message = error.message))
     }
 
-    private fun onSuccessMovies(list: List<Movie>) {
-        movies.postValue(Result.success(list))
-    }
-
-    fun getMoviesLiveData(): LiveData<Result<List<Movie>>> = movies
+    fun getMoviesLiveData(): LiveData<Result<List<Movie>>> = moviesLiveData
 
     fun getMoviesSubscribedLiveData(): LiveData<Result<List<Movie>>> = moviesSubscribed
-
-    override fun onCleared() {
-        compositeDisposable.clear()
-        super.onCleared()
-    }
 }
