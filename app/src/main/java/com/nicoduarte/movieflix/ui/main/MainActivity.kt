@@ -4,64 +4,64 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.nicoduarte.movieflix.R
 import com.nicoduarte.movieflix.api.Result
 import com.nicoduarte.movieflix.database.model.Movie
+import com.nicoduarte.movieflix.databinding.ActivityMainBinding
 import com.nicoduarte.movieflix.ui.BaseActivity
 import com.nicoduarte.movieflix.ui.detail.MovieDetailActivity
 import com.nicoduarte.movieflix.ui.search.SearchActivity
 import com.nicoduarte.movieflix.ui.utils.*
-import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : BaseActivity() {
 
     private val viewModelFactory by lazy { ViewModelFactory(application) }
+    private val binding by lazy { ActivityMainBinding.inflate(layoutInflater) }
     private val viewModel by viewModels<MainViewModel> { viewModelFactory }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-        toolbarToLoad(toolbar)
+        setContentView(binding.root)
+        toolbarToLoad(binding.toolbar)
         setupList()
         viewModel.getMoviesLiveData().observe(this, { observerLiveData(it) })
         viewModel.getMoviesSubscribedLiveData().observe(this, { observerSubscribedLiveData(it) })
-        btnTryAgain.setOnClickListener { viewModel.getMovies() }
+        binding.btnTryAgain.setOnClickListener { viewModel.getMovies() }
     }
 
     private fun observerSubscribedLiveData(results: Result<List<Movie>>) {
         results.setState({
-            (rvMovies.adapter as MovieAdapter).addSubscribedMovies(it)
+            (binding.rvMovies.adapter as MovieAdapter).addSubscribedMovies(it)
         }, {
-            showMessage(rootView, it)
+            showMessage(binding.root, it)
         }, {})
     }
 
     private fun observerLiveData(results: Result<List<Movie>>) {
         results.setState({
-            containerNoConexion.gone()
-            rvMovies.visible()
-            (rvMovies.adapter as MovieAdapter).addMovies(it)
+            binding.containerNoConexion.gone()
+            binding.rvMovies.visible()
+            (binding.rvMovies.adapter as MovieAdapter).addMovies(it)
         }, {
-            containerNoConexion.visible()
-            rvMovies.gone()
+            binding.containerNoConexion.visible()
+            binding.rvMovies.gone()
         }, {})
     }
 
     private fun setupList() {
-        rvMovies.adapter = MovieAdapter(mutableListOf(), mutableListOf()) { goToDetail(it) }
-        rvMovies.addItemDecoration(
+        binding.rvMovies.adapter = MovieAdapter(mutableListOf(), mutableListOf()) { goToDetail(it) }
+        binding.rvMovies.addItemDecoration(
             EqualSpacingItemDecoration(
                 resources.getDimensionPixelOffset(R.dimen.margin_8dp),
                 EqualSpacingItemDecoration.VERTICAL
             )
         )
-        rvMovies.addOnScrollListener(
+        binding.rvMovies.addOnScrollListener(
             object :
-                EndlessRecyclerViewScrollListener(rvMovies.layoutManager as LinearLayoutManager) {
+                EndlessRecyclerViewScrollListener(binding.rvMovies.layoutManager as LinearLayoutManager) {
                 override fun onLoadMore(page: Int, totalItemsCount: Int, view: RecyclerView) {
                     viewModel.getMovies(page)
                 }

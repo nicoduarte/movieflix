@@ -8,6 +8,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.nicoduarte.movieflix.R
 import com.nicoduarte.movieflix.api.ApiService
 import com.nicoduarte.movieflix.database.model.Movie
+import com.nicoduarte.movieflix.databinding.ItemInnerRecyclerBinding
+import com.nicoduarte.movieflix.databinding.ItemMainMovieBinding
+import com.nicoduarte.movieflix.databinding.ItemMovieSubscriptionBinding
+import com.nicoduarte.movieflix.databinding.ItemTitleBinding
 import com.nicoduarte.movieflix.ui.utils.gone
 import com.nicoduarte.movieflix.ui.utils.inflate
 import com.nicoduarte.movieflix.ui.utils.loadImage
@@ -77,6 +81,7 @@ class MovieAdapter(
     }
 
     inner class MovieSubscriptionHolder(itemView: View) : BaseHolder<List<Movie>>(itemView) {
+        private val binding = ItemInnerRecyclerBinding.bind(itemView)
 
         init {
             itemView.rvMoviesSubscription.adapter = SubscriptionAdapter(mutableListOf()) {
@@ -86,18 +91,18 @@ class MovieAdapter(
             snapHelper.attachToRecyclerView(itemView.rvMoviesSubscription)
         }
 
-        public override fun bind(data: List<Movie>) = with(itemView) {
+        public override fun bind(data: List<Movie>) = with(binding) {
             if(data.isEmpty()) {
-                gone()
-                layoutParams = RecyclerView.LayoutParams(0, 0)
+                root.gone()
+                root.layoutParams = RecyclerView.LayoutParams(0, 0)
             }
             else {
-                layoutParams = RecyclerView.LayoutParams(
+                root.layoutParams = RecyclerView.LayoutParams(
                     ViewGroup.LayoutParams.MATCH_PARENT,
                     ViewGroup.LayoutParams.WRAP_CONTENT
                 )
 
-                visible()
+                root.visible()
                 (rvMoviesSubscription.adapter as SubscriptionAdapter)
                     .addMovies(data)
             }
@@ -105,13 +110,13 @@ class MovieAdapter(
     }
 
     inner class TitleHolder(itemView: View) : BaseHolder<String>(itemView) {
+        private val binding = ItemTitleBinding.bind(itemView)
 
-        public override fun bind(data: String) = with(itemView) {
-
-        }
+        public override fun bind(data: String) = with(itemView) {}
     }
 
     inner class MovieHolder(itemView: View) : BaseHolder<Movie>(itemView) {
+        private val binding = ItemMainMovieBinding.bind(itemView)
 
         fun setAnimation(viewToAnimate: View, position: Int) {
             // If the bound view wasn't previously displayed on screen, it's animated
@@ -129,7 +134,7 @@ class MovieAdapter(
             itemView.clearAnimation()
         }
 
-        public override fun bind(data: Movie): Unit = with(itemView)  {
+        public override fun bind(data: Movie): Unit = with(binding)  {
             tvName.text = data.title
             data.genre?.let {
                 if (it.name.isEmpty()) tvCategory.gone()
@@ -141,7 +146,7 @@ class MovieAdapter(
                     R.drawable.placeholder_movie
                 )
             }
-            setOnClickListener { clickListener(data) }
+            root.setOnClickListener { clickListener(data) }
         }
     }
 

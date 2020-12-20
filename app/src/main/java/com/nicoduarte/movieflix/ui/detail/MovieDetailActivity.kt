@@ -16,31 +16,32 @@ import com.google.android.material.appbar.AppBarLayout
 import com.nicoduarte.movieflix.R
 import com.nicoduarte.movieflix.api.ApiService
 import com.nicoduarte.movieflix.database.model.Movie
+import com.nicoduarte.movieflix.databinding.ActivityMovieDetailBinding
 import com.nicoduarte.movieflix.ui.BaseActivity
 import com.nicoduarte.movieflix.ui.GlideApp
 import com.nicoduarte.movieflix.ui.utils.colorPalette
 import com.nicoduarte.movieflix.ui.utils.getDateFormatted
 import com.nicoduarte.movieflix.ui.utils.loadImage
-import kotlinx.android.synthetic.main.activity_movie_detail.*
 
 
 class MovieDetailActivity : BaseActivity(), AppBarLayout.OnOffsetChangedListener {
 
     private val viewModelFactory by lazy { ViewModelFactory(application) }
     private val viewModel by viewModels<DetailViewModel> { viewModelFactory }
+    private val binding by lazy { ActivityMovieDetailBinding.inflate(layoutInflater) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_movie_detail)
+        setContentView(binding.root)
 
-        toolbarToLoad(toolbar)
+        toolbarToLoad(binding.toolbar)
         enableHomeDisplay(true)
 
         val movie = intent.getParcelableExtra<Movie>(EXTRA_MOVIE)
         movie?.let { loadMovie(it) }
 
-        appBar.addOnOffsetChangedListener(this)
-        btnSubscribe.setOnClickListener {
+        binding.appBar.addOnOffsetChangedListener(this)
+        binding.btnSubscribe.setOnClickListener {
             movie?.let {
                 movie.isSubscribed = !movie.isSubscribed
                 viewModel.insertOrDelete(movie)
@@ -53,27 +54,27 @@ class MovieDetailActivity : BaseActivity(), AppBarLayout.OnOffsetChangedListener
         val offsetAlpha = appBarLayout.y / appBarLayout.totalScrollRange
         when {
             offsetAlpha == 0f -> {
-                ViewCompat.setNestedScrollingEnabled(nestedScrollView, true)
+                ViewCompat.setNestedScrollingEnabled(binding.nestedScrollView, true)
             }
             offsetAlpha > -0.5 -> {
-                val scaleDownX = ObjectAnimator.ofFloat(cvPoster, "scaleX", offsetAlpha + 1)
-                val scaleDownY = ObjectAnimator.ofFloat(cvPoster, "scaleY", offsetAlpha + 1)
+                val scaleDownX = ObjectAnimator.ofFloat(binding.cvPoster, "scaleX", offsetAlpha + 1)
+                val scaleDownY = ObjectAnimator.ofFloat(binding.cvPoster, "scaleY", offsetAlpha + 1)
                 scaleDownX.setDuration(0).start()
                 scaleDownY.setDuration(0).start()
 
-                val alphaTitle = ObjectAnimator.ofFloat(tvTitle, "alpha", offsetAlpha + 1)
-                val alphaDate = ObjectAnimator.ofFloat(tvReleaseDate, "alpha", offsetAlpha + 1)
+                val alphaTitle = ObjectAnimator.ofFloat(binding.tvTitle, "alpha", offsetAlpha + 1)
+                val alphaDate = ObjectAnimator.ofFloat(binding.tvReleaseDate, "alpha", offsetAlpha + 1)
                 alphaTitle.setDuration(0).start()
                 alphaDate.setDuration(0).start()
             }
-            else -> ViewCompat.setNestedScrollingEnabled(nestedScrollView, false)
+            else -> ViewCompat.setNestedScrollingEnabled(binding.nestedScrollView, false)
         }
     }
 
     private fun loadMovie(movie: Movie) {
-        tvTitle.text = movie.title
-        tvReleaseDate.text = getDateFormatted(movie.releaseDate, getString(R.string.format_origin))
-        tvOverview.text = movie.overview
+        binding.tvTitle.text = movie.title
+        binding.tvReleaseDate.text = getDateFormatted(movie.releaseDate, getString(R.string.format_origin))
+        binding.tvOverview.text = movie.overview
 
         GlideApp.with(this)
                 .asBitmap()
@@ -100,30 +101,30 @@ class MovieDetailActivity : BaseActivity(), AppBarLayout.OnOffsetChangedListener
                         resource?.let {
                             val palette = Palette.from(resource).generate()
                             palette.dominantSwatch?.rgb?.let {
-                                ivBackground.setBackgroundColor(
+                                binding.ivBackground.setBackgroundColor(
                                     colorPalette(it)
                                 )
-                                collapsingToolbar.setContentScrimColor(it)
+                                binding.collapsingToolbar.setContentScrimColor(it)
                             }
 
                             palette.lightVibrantSwatch?.rgb?.let {
-                                tvTitle.setTextColor(it)
-                                tvReleaseDate.setTextColor(it)
-                                tvOverview.setTextColor(it)
-                                tvLabelOverview.setTextColor(it)
-                                btnSubscribe.backgroundTintList = ColorStateList.valueOf(it)
+                                binding.tvTitle.setTextColor(it)
+                                binding.tvReleaseDate.setTextColor(it)
+                                binding.tvOverview.setTextColor(it)
+                                binding.tvLabelOverview.setTextColor(it)
+                                binding.btnSubscribe.backgroundTintList = ColorStateList.valueOf(it)
                             }
 
                             palette.darkVibrantSwatch?.rgb?.let {
-                                btnSubscribe.setTextColor(it)
+                                binding.btnSubscribe.setTextColor(it)
                             }
                         }
                         return false
                     }
                 })
-                .into(ivPoster)
+                .into(binding.ivPoster)
 
-        ivPosterBackground.loadImage(
+        binding.ivPosterBackground.loadImage(
             ApiService.IMAGE_BASE_URL.plus(movie.posterPath),
             R.drawable.placeholder_movie
         )
@@ -137,10 +138,10 @@ class MovieDetailActivity : BaseActivity(), AppBarLayout.OnOffsetChangedListener
     }
 
     private fun changeTextButton(isSubscribed: Boolean) {
-        if(isSubscribed) {
-            btnSubscribe.text = getString(R.string.btn_subscribed)
+        if (isSubscribed) {
+            binding.btnSubscribe.text = getString(R.string.btn_subscribed)
         } else {
-            btnSubscribe.text = getString(R.string.btn_subscribe)
+            binding.btnSubscribe.text = getString(R.string.btn_subscribe)
         }
     }
 

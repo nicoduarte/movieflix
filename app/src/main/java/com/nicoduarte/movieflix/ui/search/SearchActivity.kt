@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import com.nicoduarte.movieflix.R
 import com.nicoduarte.movieflix.api.Result
 import com.nicoduarte.movieflix.database.model.Movie
+import com.nicoduarte.movieflix.databinding.ActivitySearchBinding
 import com.nicoduarte.movieflix.ui.BaseActivity
 import com.nicoduarte.movieflix.ui.detail.MovieDetailActivity
 import com.nicoduarte.movieflix.ui.utils.EqualSpacingItemDecoration
@@ -20,17 +21,16 @@ import com.nicoduarte.movieflix.ui.utils.gone
 import com.nicoduarte.movieflix.ui.utils.showMessage
 import com.nicoduarte.movieflix.ui.utils.visible
 import kotlinx.android.synthetic.main.activity_movie_detail.toolbar
-import kotlinx.android.synthetic.main.activity_search.*
-import kotlinx.android.synthetic.main.activity_search.progress
 
 class SearchActivity : BaseActivity() {
 
     private val viewModelFactory by lazy { ViewModelFactory(application) }
     private val viewModel by viewModels<SearchViewModel> { viewModelFactory }
+    private val binding by lazy { ActivitySearchBinding.inflate(layoutInflater) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_search)
+        setContentView(binding.root)
 
         toolbarToLoad(toolbar)
         enableHomeDisplay(true)
@@ -40,13 +40,13 @@ class SearchActivity : BaseActivity() {
     }
 
     private fun setupRecycler() {
-        rvSearchMovies.adapter = SearchAdapter(mutableListOf(), {
+        binding.rvSearchMovies.adapter = SearchAdapter(mutableListOf(), {
             goToDetail(it)
         }, {
             viewModel.insertOrDelete(it)
         })
 
-        rvSearchMovies.addItemDecoration(
+        binding.rvSearchMovies.addItemDecoration(
                 EqualSpacingItemDecoration(
                         resources.getDimensionPixelOffset(R.dimen.margin_8dp),
                         EqualSpacingItemDecoration.VERTICAL
@@ -63,24 +63,24 @@ class SearchActivity : BaseActivity() {
             paint.color = ContextCompat.getColor(this@SearchActivity, R.color.gray_divider)
         })
 
-        rvSearchMovies.addItemDecoration(divider)
+        binding.rvSearchMovies.addItemDecoration(divider)
     }
 
     private fun observerLiveData(result: Result<List<Movie>>) {
         result.setState({
-            progress.gone()
-            rvSearchMovies.visible()
-            (rvSearchMovies.adapter as SearchAdapter).setMovies(it)
-            if(it.isEmpty()) tvEmptyMovies.visible()
-            else tvEmptyMovies.gone()
+            binding.progress.gone()
+            binding.rvSearchMovies.visible()
+            (binding.rvSearchMovies.adapter as SearchAdapter).setMovies(it)
+            if(it.isEmpty()) binding.tvEmptyMovies.visible()
+            else binding.tvEmptyMovies.gone()
         },{
-            showMessage(rootView, it)
-            progress.gone()
-            tvEmptyMovies.visible()
+            showMessage(binding.root, it)
+            binding.progress.gone()
+            binding.tvEmptyMovies.visible()
         },{
-            progress.visible()
-            rvSearchMovies.gone()
-            tvEmptyMovies.gone()
+            binding.progress.visible()
+            binding.rvSearchMovies.gone()
+            binding.tvEmptyMovies.gone()
         })
     }
 
