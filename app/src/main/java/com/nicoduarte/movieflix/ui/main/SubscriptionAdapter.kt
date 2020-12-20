@@ -6,9 +6,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.nicoduarte.movieflix.R
 import com.nicoduarte.movieflix.api.ApiService
 import com.nicoduarte.movieflix.database.model.Movie
+import com.nicoduarte.movieflix.databinding.ItemMovieSubscriptionBinding
 import com.nicoduarte.movieflix.ui.utils.inflate
 import com.nicoduarte.movieflix.ui.utils.loadImage
-import kotlinx.android.synthetic.main.item_main_movie.view.*
 
 class SubscriptionAdapter(
     private var items: MutableList<Movie>,
@@ -32,14 +32,16 @@ class SubscriptionAdapter(
     }
 
     inner class MovieHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        fun bind(movie: Movie) = with(itemView) {
+        private val binding = ItemMovieSubscriptionBinding.bind(itemView)
+
+        fun bind(movie: Movie) = with(binding) {
             if (!movie.posterPath.isNullOrEmpty()) {
                 ivCover.loadImage(
                     ApiService.IMAGE_BASE_URL.plus(movie.posterPath),
                     R.drawable.placeholder_movie
                 )
             }
-            setOnClickListener { clickListener(movie) }
+            root.setOnClickListener { clickListener(movie) }
         }
     }
 }

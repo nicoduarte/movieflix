@@ -10,14 +10,11 @@ import com.nicoduarte.movieflix.api.ApiService
 import com.nicoduarte.movieflix.database.model.Movie
 import com.nicoduarte.movieflix.databinding.ItemInnerRecyclerBinding
 import com.nicoduarte.movieflix.databinding.ItemMainMovieBinding
-import com.nicoduarte.movieflix.databinding.ItemMovieSubscriptionBinding
 import com.nicoduarte.movieflix.databinding.ItemTitleBinding
 import com.nicoduarte.movieflix.ui.utils.gone
 import com.nicoduarte.movieflix.ui.utils.inflate
 import com.nicoduarte.movieflix.ui.utils.loadImage
 import com.nicoduarte.movieflix.ui.utils.visible
-import kotlinx.android.synthetic.main.item_inner_recycler.view.*
-import kotlinx.android.synthetic.main.item_main_movie.view.*
 
 class MovieAdapter(
     private var items: MutableList<Movie>,
@@ -84,11 +81,11 @@ class MovieAdapter(
         private val binding = ItemInnerRecyclerBinding.bind(itemView)
 
         init {
-            itemView.rvMoviesSubscription.adapter = SubscriptionAdapter(mutableListOf()) {
+            binding.rvMoviesSubscription.adapter = SubscriptionAdapter(mutableListOf()) {
                 clickListener(it)
             }
             val snapHelper = LinearSnapHelper()
-            snapHelper.attachToRecyclerView(itemView.rvMoviesSubscription)
+            snapHelper.attachToRecyclerView(binding.rvMoviesSubscription)
         }
 
         public override fun bind(data: List<Movie>) = with(binding) {

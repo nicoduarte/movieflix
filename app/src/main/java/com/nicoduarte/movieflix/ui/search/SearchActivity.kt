@@ -20,7 +20,6 @@ import com.nicoduarte.movieflix.ui.utils.EqualSpacingItemDecoration
 import com.nicoduarte.movieflix.ui.utils.gone
 import com.nicoduarte.movieflix.ui.utils.showMessage
 import com.nicoduarte.movieflix.ui.utils.visible
-import kotlinx.android.synthetic.main.activity_movie_detail.toolbar
 
 class SearchActivity : BaseActivity() {
 
@@ -32,7 +31,7 @@ class SearchActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
-        toolbarToLoad(toolbar)
+        toolbarToLoad(binding.toolbarView.toolbar)
         enableHomeDisplay(true)
         setupRecycler()
 
