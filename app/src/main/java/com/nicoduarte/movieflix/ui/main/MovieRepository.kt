@@ -8,6 +8,7 @@ import com.nicoduarte.movieflix.database.GenreDao
 import com.nicoduarte.movieflix.database.MovieDao
 import com.nicoduarte.movieflix.database.MovieDatabase
 import com.nicoduarte.movieflix.database.model.Movie
+import kotlinx.coroutines.flow.Flow
 
 class MovieRepository(
     application: Application
@@ -41,7 +42,7 @@ class MovieRepository(
         return movieDao.delete(movie)
     }
 
-    suspend fun getSubscribedMovies(): List<Movie> {
+    fun getSubscribedMovies(): Flow<List<Movie>> {
         return movieDao.getMovies()
     }
 }

@@ -28,7 +28,7 @@ class MainActivity : BaseActivity() {
         toolbarToLoad(binding.toolbar)
         setupList()
         viewModel.getMoviesLiveData().observe(this, { observerLiveData(it) })
-        viewModel.getMoviesSubscribedLiveData().observe(this, { observerSubscribedLiveData(it) })
+        viewModel.moviesSubscribed.observe(this, { observerSubscribedLiveData(it) })
         binding.btnTryAgain.setOnClickListener { viewModel.getMovies() }
     }
 
@@ -37,7 +37,7 @@ class MainActivity : BaseActivity() {
             (binding.rvMovies.adapter as MovieAdapter).addSubscribedMovies(it)
         }, {
             showMessage(binding.root, it)
-        }, {})
+        })
     }
 
     private fun observerLiveData(results: Result<List<Movie>>) {

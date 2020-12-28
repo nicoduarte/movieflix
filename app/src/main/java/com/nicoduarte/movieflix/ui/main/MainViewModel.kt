@@ -1,13 +1,11 @@
 package com.nicoduarte.movieflix.ui.main
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.nicoduarte.movieflix.database.model.Movie
 import com.nicoduarte.movieflix.api.Result
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -15,17 +13,11 @@ class MainViewModel(
     private val movieRepository: MovieRepository
 ) : ViewModel() {
     private val moviesLiveData = MutableLiveData<Result<List<Movie>>>()
-    private val moviesSubscribed = MutableLiveData<Result<List<Movie>>>()
+    val moviesSubscribed = movieRepository.getSubscribedMovies()
+            .map { Result.success(it) }
+            .asLiveData()
 
-    init {
-        getMovies()
-        getSubscribedMovies()
-    }
-
-    private fun getSubscribedMovies() = viewModelScope.launch {
-        val movies = withContext(Dispatchers.IO) { movieRepository.getSubscribedMovies() }
-        moviesSubscribed.value = Result.success(movies)
-    }
+    init { getMovies() }
 
     fun getMovies(page: Int = 1) = viewModelScope.launch {
         moviesLiveData.value = Result.loading()
@@ -48,6 +40,4 @@ class MainViewModel(
     }
 
     fun getMoviesLiveData(): LiveData<Result<List<Movie>>> = moviesLiveData
-
-    fun getMoviesSubscribedLiveData(): LiveData<Result<List<Movie>>> = moviesSubscribed
 }
