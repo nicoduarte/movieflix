@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.nicoduarte.movieflix.ui.view.CollapsibleToolbar xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/motionLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:minHeight="110dp"
+    app:layoutDescription="@xml/scene_movie"
+    app:layout_scrollFlags="scroll|enterAlways|snap|exitUntilCollapsed"
+    tools:background="@color/gray">
+
+    <ImageView
+        android:id="@+id/ivPoster"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:adjustViewBounds="true"
+        android:background="@color/slate"
+        android:contentDescription="lalalal"
+        android:src="@drawable/placeholder_movie" />
+
+    <TextView
+        android:id="@+id/tvTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/sfns_text"
+        android:letterSpacing="-0.02"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        tools:text="Breaking Bad" />
+
+    <TextView
+        android:id="@+id/tvReleaseDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/sfns_text"
+        android:gravity="center_horizontal"
+        android:letterSpacing="-0.02"
+        android:textColor="@color/white"
+        android:textSize="16sp"
+        android:textStyle="normal"
+        tools:text="2011" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnSubscribe"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_16dp"
+        android:fontFamily="@font/sfns_text"
+        android:letterSpacing="-0.02"
+        android:paddingHorizontal="@dimen/padding_32dp"
+        android:text="@string/btn_subscribe"
+        android:textColor="@color/white"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:backgroundTint="@android:color/transparent"
+        app:cornerRadius="25dp"
+        app:strokeColor="@color/white"
+        app:strokeWidth="1dp" />
+
+</com.nicoduarte.movieflix.ui.view.CollapsibleToolbar>

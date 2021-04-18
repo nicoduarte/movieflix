@@ -1,18 +1,15 @@
 package com.nicoduarte.movieflix.ui.detail
 
-import android.animation.ObjectAnimator
 import android.content.res.ColorStateList
 import android.graphics.Bitmap
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.annotation.Nullable
-import androidx.core.view.ViewCompat
 import androidx.palette.graphics.Palette
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
-import com.google.android.material.appbar.AppBarLayout
 import com.nicoduarte.movieflix.R
 import com.nicoduarte.movieflix.api.ApiService
 import com.nicoduarte.movieflix.database.model.Movie
@@ -24,7 +21,7 @@ import com.nicoduarte.movieflix.ui.utils.getDateFormatted
 import com.nicoduarte.movieflix.ui.utils.loadImage
 
 
-class MovieDetailActivity : BaseActivity(), AppBarLayout.OnOffsetChangedListener {
+class MovieDetailActivity : BaseActivity() {
 
     private val viewModelFactory by lazy { ViewModelFactory(application) }
     private val viewModel by viewModels<DetailViewModel> { viewModelFactory }
@@ -40,8 +37,7 @@ class MovieDetailActivity : BaseActivity(), AppBarLayout.OnOffsetChangedListener
         val movie = intent.getParcelableExtra<Movie>(EXTRA_MOVIE)
         movie?.let { loadMovie(it) }
 
-        binding.appBar.addOnOffsetChangedListener(this)
-        binding.btnSubscribe.setOnClickListener {
+        binding.contentMovie.btnSubscribe.setOnClickListener {
             movie?.let {
                 movie.isSubscribed = !movie.isSubscribed
                 viewModel.insertOrDelete(movie)
@@ -50,31 +46,10 @@ class MovieDetailActivity : BaseActivity(), AppBarLayout.OnOffsetChangedListener
         }
     }
 
-    override fun onOffsetChanged(appBarLayout: AppBarLayout, verticalOffset: Int) {
-        val offsetAlpha = appBarLayout.y / appBarLayout.totalScrollRange
-        when {
-            offsetAlpha == 0f -> {
-                ViewCompat.setNestedScrollingEnabled(binding.nestedScrollView, true)
-            }
-            offsetAlpha > -0.5 -> {
-                val scaleDownX = ObjectAnimator.ofFloat(binding.cvPoster, "scaleX", offsetAlpha + 1)
-                val scaleDownY = ObjectAnimator.ofFloat(binding.cvPoster, "scaleY", offsetAlpha + 1)
-                scaleDownX.setDuration(0).start()
-                scaleDownY.setDuration(0).start()
-
-                val alphaTitle = ObjectAnimator.ofFloat(binding.tvTitle, "alpha", offsetAlpha + 1)
-                val alphaDate = ObjectAnimator.ofFloat(binding.tvReleaseDate, "alpha", offsetAlpha + 1)
-                alphaTitle.setDuration(0).start()
-                alphaDate.setDuration(0).start()
-            }
-            else -> ViewCompat.setNestedScrollingEnabled(binding.nestedScrollView, false)
-        }
-    }
-
     private fun loadMovie(movie: Movie) {
-        binding.tvTitle.text = movie.title
-        binding.tvReleaseDate.text = getDateFormatted(movie.releaseDate, getString(R.string.format_origin))
-        binding.tvOverview.text = movie.overview
+        binding.contentMovie.tvTitle.text = movie.title
+        binding.contentMovie.tvReleaseDate.text = getDateFormatted(movie.releaseDate, getString(R.string.format_origin))
+        binding.tvOverview.text = movie.overview.plus(movie.overview).plus(movie.overview)
 
         GlideApp.with(this)
                 .asBitmap()
@@ -104,25 +79,25 @@ class MovieDetailActivity : BaseActivity(), AppBarLayout.OnOffsetChangedListener
                                 binding.ivBackground.setBackgroundColor(
                                     colorPalette(it)
                                 )
-                                binding.collapsingToolbar.setContentScrimColor(it)
+//                                binding.collapsingToolbar.setContentScrimColor(it)
                             }
 
                             palette.lightVibrantSwatch?.rgb?.let {
-                                binding.tvTitle.setTextColor(it)
-                                binding.tvReleaseDate.setTextColor(it)
+                                binding.contentMovie.tvTitle.setTextColor(it)
+                                binding.contentMovie.tvReleaseDate.setTextColor(it)
                                 binding.tvOverview.setTextColor(it)
                                 binding.tvLabelOverview.setTextColor(it)
-                                binding.btnSubscribe.backgroundTintList = ColorStateList.valueOf(it)
+                                binding.contentMovie.btnSubscribe.backgroundTintList = ColorStateList.valueOf(it)
                             }
 
                             palette.darkVibrantSwatch?.rgb?.let {
-                                binding.btnSubscribe.setTextColor(it)
+                                binding.contentMovie.btnSubscribe.setTextColor(it)
                             }
                         }
                         return false
                     }
                 })
-                .into(binding.ivPoster)
+                .into(binding.contentMovie.ivPoster)
 
         binding.ivPosterBackground.loadImage(
             ApiService.IMAGE_BASE_URL.plus(movie.posterPath),
@@ -139,9 +114,9 @@ class MovieDetailActivity : BaseActivity(), AppBarLayout.OnOffsetChangedListener
 
     private fun changeTextButton(isSubscribed: Boolean) {
         if (isSubscribed) {
-            binding.btnSubscribe.text = getString(R.string.btn_subscribed)
+            binding.contentMovie.btnSubscribe.text = getString(R.string.btn_subscribed)
         } else {
-            binding.btnSubscribe.text = getString(R.string.btn_subscribe)
+            binding.contentMovie.btnSubscribe.text = getString(R.string.btn_subscribe)
         }
     }
 
