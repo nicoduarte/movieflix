@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import androidx.activity.viewModels
+import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.nicoduarte.movieflix.R
@@ -52,6 +53,7 @@ class MainActivity : BaseActivity() {
     }
 
     private fun setupList() {
+        val concatAdapter = ConcatAdapter()
         binding.rvMovies.adapter = MovieAdapter(mutableListOf(), mutableListOf()) { goToDetail(it) }
         binding.rvMovies.addItemDecoration(
             EqualSpacingItemDecoration(
