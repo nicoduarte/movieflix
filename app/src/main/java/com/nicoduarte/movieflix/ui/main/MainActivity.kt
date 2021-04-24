@@ -8,6 +8,8 @@ import androidx.activity.viewModels
 import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.ethanhua.skeleton.RecyclerViewSkeletonScreen
+import com.ethanhua.skeleton.Skeleton
 import com.nicoduarte.movieflix.R
 import com.nicoduarte.movieflix.api.Result
 import com.nicoduarte.movieflix.database.model.Movie
@@ -22,6 +24,7 @@ class MainActivity : BaseActivity() {
     private val viewModelFactory by lazy { ViewModelFactory(application) }
     private val binding by lazy { ActivityMainBinding.inflate(layoutInflater) }
     private val viewModel by viewModels<MainViewModel> { viewModelFactory }
+    private var skeleton: RecyclerViewSkeletonScreen? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,6 +38,7 @@ class MainActivity : BaseActivity() {
 
     private fun observerSubscribedLiveData(results: Result<List<Movie>>) {
         results.setState({
+            hideSkeleton()
             ((binding.rvMovies.adapter as ConcatAdapter)
                 .adapters.first() as SubscribedMovieAdapter).addSubscribedMovies(it)
         }, {
@@ -44,6 +48,7 @@ class MainActivity : BaseActivity() {
 
     private fun observerLiveData(results: Result<List<Movie>>) {
         results.setState({
+            hideSkeleton()
             binding.containerNoConexion.gone()
             binding.rvMovies.visible()
 
@@ -55,17 +60,16 @@ class MainActivity : BaseActivity() {
             ((binding.rvMovies.adapter as ConcatAdapter)
                 .adapters[1] as MovieAdapter).addMovies(it)
         }, {
+            hideSkeleton()
             binding.containerNoConexion.visible()
             binding.rvMovies.gone()
-        }, {})
+        }, {
+            showSkeleton()
+        })
     }
 
     private fun setupList() {
-        val subscribedMovieAdapter = SubscribedMovieAdapter(mutableListOf()) { goToDetail(it) }
-        val moviesAdapter =  MovieAdapter(mutableListOf()) { goToDetail(it) }
-        val concatAdapter = ConcatAdapter(subscribedMovieAdapter, moviesAdapter)
-
-        binding.rvMovies.adapter = concatAdapter
+        binding.rvMovies.adapter = initAdapter()
         binding.rvMovies.addItemDecoration(
             EqualSpacingItemDecoration(
                 resources.getDimensionPixelOffset(R.dimen.margin_8dp),
@@ -80,6 +84,12 @@ class MainActivity : BaseActivity() {
                     viewModel.getMovies(page)
                 }
             })
+    }
+
+    private fun initAdapter(): ConcatAdapter {
+        val subscribedMovieAdapter = SubscribedMovieAdapter(mutableListOf()) { goToDetail(it) }
+        val moviesAdapter =  MovieAdapter(mutableListOf()) { goToDetail(it) }
+        return ConcatAdapter(subscribedMovieAdapter, moviesAdapter)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -112,5 +122,16 @@ class MainActivity : BaseActivity() {
     private fun goToSearch() {
         startActivity(Intent(this, SearchActivity::class.java))
         overridePendingTransition(R.anim.anim_slide_in_right, R.anim.anim_slide_out_left)
+    }
+
+    private fun showSkeleton() {
+        skeleton = Skeleton.bind(binding.rvMovies)
+            .adapter(binding.rvMovies.adapter)
+            .load(R.layout.item_skeleton_movies)
+            .show()
+    }
+
+    private fun hideSkeleton() {
+        skeleton?.hide()
     }
 }
