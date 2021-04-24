@@ -81,4 +81,5 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:2.2.0"
 
     implementation "androidx.recyclerview:recyclerview:1.2.0"
+    implementation "androidx.paging:paging-runtime-ktx:3.0.0-beta03"
 }

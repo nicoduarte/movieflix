@@ -43,7 +43,7 @@ class MovieAdapter(
             ITEM_TITLE -> (holder as TitleHolder).bind("")
             ITEM_MOVIE -> {
                 (holder as MovieHolder).bind(items[position])
-                holder.setAnimation(holder.itemView, position)
+//                holder.setAnimation(holder.itemView, position)
             }
             else -> throw IllegalArgumentException("Invalid ViewHolder")
         }
@@ -58,7 +58,7 @@ class MovieAdapter(
         if(items.isNotEmpty()) {
             val positionStart = items.size
             items.addAll(movies)
-            notifyItemRangeInserted(positionStart, items.size)
+            notifyItemRangeInserted(positionStart, movies.size)
         } else {
             items.addAll(movies)
             notifyItemRangeInserted(0, items.size)
