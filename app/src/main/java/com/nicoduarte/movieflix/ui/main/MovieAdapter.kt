@@ -3,22 +3,18 @@ package com.nicoduarte.movieflix.ui.main
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
-import androidx.recyclerview.widget.LinearSnapHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.nicoduarte.movieflix.R
 import com.nicoduarte.movieflix.api.ApiService
 import com.nicoduarte.movieflix.database.model.Movie
-import com.nicoduarte.movieflix.databinding.ItemInnerRecyclerBinding
 import com.nicoduarte.movieflix.databinding.ItemMainMovieBinding
 import com.nicoduarte.movieflix.databinding.ItemTitleBinding
 import com.nicoduarte.movieflix.ui.utils.gone
 import com.nicoduarte.movieflix.ui.utils.inflate
 import com.nicoduarte.movieflix.ui.utils.loadImage
-import com.nicoduarte.movieflix.ui.utils.visible
 
 class MovieAdapter(
     private var items: MutableList<Movie>,
-    private var itemsSubscribed: MutableList<Movie>,
     private val clickListener: (Movie) -> Unit
 )
     : RecyclerView.Adapter<MovieAdapter.BaseHolder<*>>()  {
@@ -27,7 +23,6 @@ class MovieAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseHolder<*> {
         return when (viewType) {
-            ITEM_SUBSCRIPTION -> MovieSubscriptionHolder(parent.inflate(viewType))
             ITEM_TITLE -> TitleHolder(parent.inflate(viewType))
             ITEM_MOVIE -> MovieHolder(parent.inflate(viewType))
             else -> throw IllegalArgumentException("Invalid viewType")
@@ -38,15 +33,13 @@ class MovieAdapter(
 
     override fun getItemViewType(position: Int): Int {
         return when(position) {
-            0 -> ITEM_SUBSCRIPTION
-            1 -> ITEM_TITLE
+            0 -> ITEM_TITLE
             else -> ITEM_MOVIE
         }
     }
 
     override fun onBindViewHolder(holder: BaseHolder<*>, position: Int) {
         when(getItemViewType(position)) {
-            ITEM_SUBSCRIPTION -> (holder as MovieSubscriptionHolder).bind(itemsSubscribed)
             ITEM_TITLE -> (holder as TitleHolder).bind("")
             ITEM_MOVIE -> {
                 (holder as MovieHolder).bind(items[position])
@@ -68,41 +61,7 @@ class MovieAdapter(
             notifyItemRangeInserted(positionStart, items.size)
         } else {
             items.addAll(movies)
-            notifyItemRangeInserted(2, items.size)
-        }
-    }
-
-    fun addSubscribedMovies(movies: List<Movie>) {
-        itemsSubscribed = movies.toMutableList()
-        notifyItemChanged(0)
-    }
-
-    inner class MovieSubscriptionHolder(itemView: View) : BaseHolder<List<Movie>>(itemView) {
-        private val binding = ItemInnerRecyclerBinding.bind(itemView)
-
-        init {
-            binding.rvMoviesSubscription.adapter = SubscriptionAdapter(mutableListOf()) {
-                clickListener(it)
-            }
-            val snapHelper = LinearSnapHelper()
-            snapHelper.attachToRecyclerView(binding.rvMoviesSubscription)
-        }
-
-        public override fun bind(data: List<Movie>) = with(binding) {
-            if(data.isEmpty()) {
-                root.gone()
-                root.layoutParams = RecyclerView.LayoutParams(0, 0)
-            }
-            else {
-                root.layoutParams = RecyclerView.LayoutParams(
-                    ViewGroup.LayoutParams.MATCH_PARENT,
-                    ViewGroup.LayoutParams.WRAP_CONTENT
-                )
-
-                root.visible()
-                (rvMoviesSubscription.adapter as SubscriptionAdapter)
-                    .addMovies(data)
-            }
+            notifyItemRangeInserted(0, items.size)
         }
     }
 
@@ -152,7 +111,6 @@ class MovieAdapter(
     }
 
     companion object {
-        private const val ITEM_SUBSCRIPTION = R.layout.item_inner_recycler
         private const val ITEM_TITLE = R.layout.item_title
         private const val ITEM_MOVIE = R.layout.item_main_movie
     }

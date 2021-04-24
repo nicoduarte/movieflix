@@ -35,7 +35,8 @@ class MainActivity : BaseActivity() {
 
     private fun observerSubscribedLiveData(results: Result<List<Movie>>) {
         results.setState({
-            (binding.rvMovies.adapter as MovieAdapter).addSubscribedMovies(it)
+            ((binding.rvMovies.adapter as ConcatAdapter)
+                .adapters.first() as SubscribedMovieAdapter).addSubscribedMovies(it)
         }, {
             showMessage(binding.root, it)
         })
@@ -45,7 +46,14 @@ class MainActivity : BaseActivity() {
         results.setState({
             binding.containerNoConexion.gone()
             binding.rvMovies.visible()
-            (binding.rvMovies.adapter as MovieAdapter).addMovies(it)
+
+            if ((binding.rvMovies.adapter as ConcatAdapter).adapters.size > 2) {
+                val removedAdapter = (binding.rvMovies.adapter as ConcatAdapter).adapters[2]
+                (binding.rvMovies.adapter as ConcatAdapter).removeAdapter(removedAdapter)
+            }
+
+            ((binding.rvMovies.adapter as ConcatAdapter)
+                .adapters[1] as MovieAdapter).addMovies(it)
         }, {
             binding.containerNoConexion.visible()
             binding.rvMovies.gone()
@@ -53,8 +61,11 @@ class MainActivity : BaseActivity() {
     }
 
     private fun setupList() {
-        val concatAdapter = ConcatAdapter()
-        binding.rvMovies.adapter = MovieAdapter(mutableListOf(), mutableListOf()) { goToDetail(it) }
+        val subscribedMovieAdapter = SubscribedMovieAdapter(mutableListOf()) { goToDetail(it) }
+        val moviesAdapter =  MovieAdapter(mutableListOf()) { goToDetail(it) }
+        val concatAdapter = ConcatAdapter(subscribedMovieAdapter, moviesAdapter)
+
+        binding.rvMovies.adapter = concatAdapter
         binding.rvMovies.addItemDecoration(
             EqualSpacingItemDecoration(
                 resources.getDimensionPixelOffset(R.dimen.margin_8dp),
@@ -65,6 +76,7 @@ class MainActivity : BaseActivity() {
             object :
                 EndlessRecyclerViewScrollListener(binding.rvMovies.layoutManager as LinearLayoutManager) {
                 override fun onLoadMore(page: Int, totalItemsCount: Int, view: RecyclerView) {
+                    (binding.rvMovies.adapter as ConcatAdapter).addAdapter(LoadingAdapter())
                     viewModel.getMovies(page)
                 }
             })
