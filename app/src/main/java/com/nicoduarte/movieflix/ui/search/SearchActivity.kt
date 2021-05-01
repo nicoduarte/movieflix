@@ -67,17 +67,14 @@ class SearchActivity : BaseActivity() {
 
     private fun observerLiveData(result: Result<List<Movie>>) {
         result.setState({
-            binding.progress.gone()
             binding.rvSearchMovies.visible()
             (binding.rvSearchMovies.adapter as SearchAdapter).setMovies(it)
             if(it.isEmpty()) binding.tvEmptyMovies.visible()
             else binding.tvEmptyMovies.gone()
         },{
             showMessage(binding.root, it)
-            binding.progress.gone()
             binding.tvEmptyMovies.visible()
         },{
-            binding.progress.visible()
             binding.rvSearchMovies.gone()
             binding.tvEmptyMovies.gone()
         })
