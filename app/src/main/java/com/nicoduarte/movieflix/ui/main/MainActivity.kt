@@ -8,8 +8,6 @@ import androidx.activity.viewModels
 import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.ethanhua.skeleton.RecyclerViewSkeletonScreen
-import com.ethanhua.skeleton.Skeleton
 import com.nicoduarte.movieflix.R
 import com.nicoduarte.movieflix.api.Result
 import com.nicoduarte.movieflix.database.model.Movie
@@ -24,7 +22,6 @@ class MainActivity : BaseActivity() {
     private val viewModelFactory by lazy { ViewModelFactory(application) }
     private val binding by lazy { ActivityMainBinding.inflate(layoutInflater) }
     private val viewModel by viewModels<MainViewModel> { viewModelFactory }
-    private var skeleton: RecyclerViewSkeletonScreen? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -125,13 +122,15 @@ class MainActivity : BaseActivity() {
     }
 
     private fun showSkeleton() {
-        skeleton = Skeleton.bind(binding.rvMovies)
-            .adapter(binding.rvMovies.adapter)
-            .load(R.layout.item_skeleton_movies)
-            .show()
+        binding.viewSwitcher.displayedChild = 0
     }
 
     private fun hideSkeleton() {
-        skeleton?.hide()
+        binding.viewSwitcher.displayedChild = 1
+    }
+
+    companion object {
+        private const val SKELETON_INDEX = 0
+        private const val CONTENT_INDEX = 1
     }
 }
