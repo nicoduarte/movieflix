@@ -15,16 +15,11 @@ class LoadingAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>()  {
 
     override fun getItemCount() = 1
 
-
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        (holder as MovieHolder).bind()
+    override fun getItemViewType(position: Int): Int {
+        return R.layout.item_loading
     }
 
-    inner class MovieHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        private val binding = ItemLoadingBinding.bind(itemView)
+    inner class MovieHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {}
 
-        fun bind() = with(binding) {
-
-        }
-    }
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {}
 }

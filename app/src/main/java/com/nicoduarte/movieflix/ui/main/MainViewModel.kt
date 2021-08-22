@@ -12,7 +12,7 @@ import kotlinx.coroutines.withContext
 class MainViewModel(
     private val movieRepository: MovieRepository
 ) : ViewModel() {
-    private val moviesLiveData = MutableLiveData<Result<List<Movie>>>()
+    private val moviesLiveData = MutableLiveData<Result<MoviesUiModel>>()
     val moviesSubscribed = movieRepository.getSubscribedMovies()
             .map { Result.success(it) }
             .asLiveData()
@@ -20,7 +20,12 @@ class MainViewModel(
     init { getMovies() }
 
     fun getMovies(page: Int = 1) = viewModelScope.launch {
-        moviesLiveData.value = Result.loading()
+        if (page == 1) {
+            moviesLiveData.value = Result.loading()
+        } else {
+            moviesLiveData.value = Result.success(MoviesUiModel(showLoading = true))
+        }
+
         val moviesResponse = withContext(Dispatchers.IO) { movieRepository.getMovies(page) }
         val genresResponse = async { movieRepository.getGenres() }
 
@@ -32,12 +37,23 @@ class MainViewModel(
                 movie.genre = genres.find { movie.genreIds!!.first() == it.id }
         }
 
-        moviesLiveData.value = Result.success(movies)
+        if (page > 1) {
+            moviesLiveData.value = Result.success(MoviesUiModel(pageMovies = movies))
+        } else {
+            moviesLiveData.value = Result.success(MoviesUiModel(firstMovies = movies))
+        }
+
     }
 
     private fun onErrorMovies(error: Throwable) {
         moviesLiveData.postValue(Result.error(message = error.message))
     }
 
-    fun getMoviesLiveData(): LiveData<Result<List<Movie>>> = moviesLiveData
+    fun getMoviesLiveData(): LiveData<Result<MoviesUiModel>> = moviesLiveData
+
+    data class MoviesUiModel(
+        val firstMovies: List<Movie>? = null,
+        val pageMovies: List<Movie>? = null,
+        val showLoading: Boolean = false
+    )
 }

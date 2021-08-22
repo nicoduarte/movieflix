@@ -43,19 +43,31 @@ class MainActivity : BaseActivity() {
         })
     }
 
-    private fun observerLiveData(results: Result<List<Movie>>) {
-        results.setState({
-            hideSkeleton()
-            binding.containerNoConexion.gone()
-            binding.rvMovies.visible()
-
-            if ((binding.rvMovies.adapter as ConcatAdapter).adapters.size > 2) {
-                val removedAdapter = (binding.rvMovies.adapter as ConcatAdapter).adapters[2]
-                (binding.rvMovies.adapter as ConcatAdapter).removeAdapter(removedAdapter)
+    private fun observerLiveData(uiModel: Result<MainViewModel.MoviesUiModel>) {
+        uiModel.setState({
+            if (uiModel.data?.showLoading == true) {
+                if ((binding.rvMovies.adapter as ConcatAdapter).adapters.size < 3) {
+                    (binding.rvMovies.adapter as ConcatAdapter).addAdapter(LoadingAdapter())
+                }
+            } else {
+                if ((binding.rvMovies.adapter as ConcatAdapter).adapters.size > 2) {
+                    val removedAdapter = (binding.rvMovies.adapter as ConcatAdapter).adapters[2]
+                    (binding.rvMovies.adapter as ConcatAdapter).removeAdapter(removedAdapter)
+                }
             }
 
-            ((binding.rvMovies.adapter as ConcatAdapter)
-                .adapters[1] as MovieAdapter).addMovies(it)
+            uiModel.data?.firstMovies?.let {
+                hideSkeleton()
+                binding.containerNoConexion.gone()
+                binding.rvMovies.visible()
+                ((binding.rvMovies.adapter as ConcatAdapter)
+                    .adapters[1] as MovieAdapter).addMovies(it)
+            }
+
+            uiModel.data?.pageMovies?.let {
+                ((binding.rvMovies.adapter as ConcatAdapter)
+                    .adapters[1] as MovieAdapter).addMovies(it)
+            }
         }, {
             hideSkeleton()
             binding.containerNoConexion.visible()
@@ -77,7 +89,6 @@ class MainActivity : BaseActivity() {
             object :
                 EndlessRecyclerViewScrollListener(binding.rvMovies.layoutManager as LinearLayoutManager) {
                 override fun onLoadMore(page: Int, totalItemsCount: Int, view: RecyclerView) {
-                    (binding.rvMovies.adapter as ConcatAdapter).addAdapter(LoadingAdapter())
                     viewModel.getMovies(page)
                 }
             })
@@ -122,11 +133,11 @@ class MainActivity : BaseActivity() {
     }
 
     private fun showSkeleton() {
-        binding.viewSwitcher.displayedChild = 0
+        binding.viewSwitcher.displayedChild = SKELETON_INDEX
     }
 
     private fun hideSkeleton() {
-        binding.viewSwitcher.displayedChild = 1
+        binding.viewSwitcher.displayedChild = CONTENT_INDEX
     }
 
     companion object {
